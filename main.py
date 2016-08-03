@@ -52,10 +52,20 @@ class IndexPage(Handler):
     def get(self):
         self.render_main()
 
+   
+
+# Blog Page Handler class definition to hadle and render Blog html
+class BlogPage(Handler):
+    def render_main(self):
+        self.render("blogs.html")
+
+    def get(self):
+        self.render_main()
+
     def post(self):
         newBlogTitle =  self.request.get('title')
         newBlogDescription =  self.request.get('description')
-        self.write(newBlogTitle)    
+        self.write(newBlogTitle) 
 
 
 # Add Blog Page Handler class definition to hadle and render add_blog html page
@@ -71,6 +81,6 @@ class AddBlogPage(Handler):
 
 app = webapp2.WSGIApplication([
     ('/', IndexPage),
-    ('/blog', IndexPage),
+    ('/blog', BlogPage),
     ('/blog/addblog', AddBlogPage)
 ], debug=True)
