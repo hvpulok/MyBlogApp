@@ -9,17 +9,43 @@
     <link rel="shortcut icon" type="image/x-icon" href="http://icons.iconarchive.com/icons/blackvariant/button-ui-requests-15/256/YNAB-icon.png" />
 
     <!-- Bootstrap css CDN Link -->
-    <!--Normal-->
-    <!--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">-->
     <!--flatly-->
     <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha384-XYCjB+hFAjSbgf9yKUgbysEjaVLOXhCgATTEBpCqT1R3jvG5LGRAK5ZIyRbH5vpX" crossorigin="anonymous">
-    <!--Google Fonts-->
-    <link href='https://fonts.googleapis.com/css?family=Ubuntu:400,700|Open+Sans' rel='stylesheet' type='text/css'>
+    <!--Font Awesome CDN Link-->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
     <!--local css file-->
     <!--<link href="public/css/style.css" rel="stylesheet">-->
 </head>
 
 <body style="margin: 0 ">
+    <!--nav bar code-->
+    <nav class="navbar navbar-default">
+        <div class="container">
+            <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"><span class="glyphicon glyphicon-leaf" aria-hidden="true"></span> My Blog</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <!--<li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>-->
+                <li><a href="#"><i class="fa fa-th-large" aria-hidden="true"></i> Read Blogs</a></li>
+                <li><a href="#"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add New Blog</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#"><i class="fa fa-user" aria-hidden="true"></i> Login</a></li>
+                <li><a href="#"><i class="fa fa-user-plus" aria-hidden="true"></i> Sign Up</a></li>
+                <li><a href="#"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a></li>
+            </ul>
+            </div>
+        </div>
+        </nav>
+
     {% block content %}
     {% endblock %}
 
