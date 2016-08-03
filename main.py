@@ -56,8 +56,8 @@ class IndexPage(Handler):
 
 # Blog Page Handler class definition to hadle and render Blog html
 class BlogPage(Handler):
-    def render_main(self):
-        self.render("blogs.html")
+    def render_main(self, title="", description="", error=""):
+        self.render("blogs.html", title=title, description=description, error=error)
 
     def get(self):
         self.render_main()
@@ -65,7 +65,14 @@ class BlogPage(Handler):
     def post(self):
         newBlogTitle =  self.request.get('title')
         newBlogDescription =  self.request.get('description')
-        self.write(newBlogTitle) 
+
+        if newBlogTitle and newBlogDescription:
+            post = Blog(title= newBlogTitle, description=newBlogDescription)
+            post.put()
+            self.redirect("/blog")
+        else:
+            error= "We need both a title and some description of the new blog."
+            self.render("add_blog.html", title=newBlogTitle, description=newBlogDescription, error=error)
 
 
 # Add Blog Page Handler class definition to hadle and render add_blog html page
