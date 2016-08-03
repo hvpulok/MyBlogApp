@@ -1,0 +1,35 @@
+<!--This is base html template file which will be common in all html pages-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>My Blog App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="http://icons.iconarchive.com/icons/blackvariant/button-ui-requests-15/256/YNAB-icon.png" />
+
+    <!-- Bootstrap css CDN Link -->
+    <!--Normal-->
+    <!--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">-->
+    <!--flatly-->
+    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha384-XYCjB+hFAjSbgf9yKUgbysEjaVLOXhCgATTEBpCqT1R3jvG5LGRAK5ZIyRbH5vpX" crossorigin="anonymous">
+    <!--Google Fonts-->
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu:400,700|Open+Sans' rel='stylesheet' type='text/css'>
+    <!--local css file-->
+    <!--<link href="public/css/style.css" rel="stylesheet">-->
+</head>
+
+<body style="margin: 0 ">
+    {% block content %}
+    {% endblock %}
+
+
+    <!--script linking strats here--->
+    <!--local script link-->
+    <!--<script type="text/javascript" src="public/js/script.js"></script>-->
+    <!--jQuery CDN link-->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <!-- Bootstrap js CDN Link -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</body>
+</html>
