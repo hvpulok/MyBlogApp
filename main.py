@@ -21,6 +21,7 @@ import jinja2
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), autoescape=True)
 
+# Handler class definition to hadle and render html page request
 class Handler(webapp2.RequestHandler):
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
@@ -32,11 +33,8 @@ class Handler(webapp2.RequestHandler):
     def render(self, template, **kw):
         self.write(self.render_str(template, **kw))
 
-class MainHandler(webapp2.RequestHandler):
-    def get(self):
-        self.response.write('Hello world!')
-
-class MainPage(Handler):
+# Index Page Handler class definition to hadle and render Index html page request
+class IndexPage(Handler):
     def render_main(self):
         self.render("index.html")
 
@@ -44,5 +42,5 @@ class MainPage(Handler):
         self.render_main()
 
 app = webapp2.WSGIApplication([
-    ('/', MainPage)
+    ('/', IndexPage)
 ], debug=True)
