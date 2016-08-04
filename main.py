@@ -21,6 +21,7 @@ import re
 from string import letters
 import hashlib
 import hmac
+import random
 # import urllib
 
 secretCode = "Life is Beautiful"
@@ -138,14 +139,18 @@ def DuplicateUserFound(username):
     foundUser = User.all().filter('name =', username).get()
     return foundUser
 
-def saveUser(username, pw_hash, email):
+def saveUser(username, password, email):
     # hash password
-
+    pw_hash = make_pw_hash(username, password)
 
     #save user in dB
-    user = User(name= username, pw_hash=pw_hash, email = email)
-    key = user.put()
-    return key
+    savedUser = User(name= username, pw_hash=pw_hash, email = email)
+    key = savedUser.put()
+    return User(
+            key = key,
+            name = username,
+            pw_hash = pw_hash,
+            email = email)
 
 
 # signup page Handler
@@ -168,9 +173,9 @@ class SignUpPage(Handler):
             error= "Same Username Already Registered. Please Try different Username"
             self.render("signup.html", username=newUsername, email=newEmail, checkRememberMe=checkRememberMe, error=error)
         else:
-            # result = "Thanks. Result : %s %s %s %s %s" % (newUsername, newEmail, newPassword1, newPassword2, checkRememberMe)
             result = saveUser(newUsername, newPassword1, newEmail)
-            self.write(result)
+            # resultText = "Thanks. Result : %s %s %s %s" % (result.key, result.username, result.pw_hash, result.email)
+            self.write(result.name)
 
         
         
