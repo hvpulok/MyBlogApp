@@ -2,14 +2,7 @@
 
 {% block content %}
 
-<div class="jumbotron">
-    <div class="container">
-        <h1><span class="glyphicon glyphicon-leaf" aria-hidden="true"></span> All the blogs </h1>
-    </div>
-</div>
-
 <div class="container">
-    {% for blog in blogs %}
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title">{{blog.title}} 
@@ -30,9 +23,6 @@
                 </p>
             </div>
         </div>
-    {% endfor %} 
 </div>
-
-
 
 {% endblock %}

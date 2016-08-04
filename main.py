@@ -17,6 +17,7 @@
 import os
 import webapp2
 import jinja2
+# import urllib
 
 # code to initialize google datastore dB
 from google.appengine.ext import db
@@ -31,7 +32,7 @@ class Blog(db.Model):
     description = db.TextProperty(required= True)
     created = db.DateTimeProperty(auto_now_add = True)
     lastModified = db.DateTimeProperty(auto_now = True)
-
+    
     def render(self):
         self._render_text = self.description.replace('\n', '<br>')
         return render_str("post.html", p = self)
@@ -83,16 +84,23 @@ class AddBlogPage(Handler):
 
         if newBlogTitle and newBlogDescription:
             post = Blog(title= newBlogTitle, description=newBlogDescription)
-            post.put()
-            self.redirect("/blog")
+            key = post.put()
+            self.redirect("/blog/%s" % key.id())
         else:
             error= "We need both a title and some description of the new blog."
             self.render("add_blog.html", title=newBlogTitle, description=newBlogDescription, error=error)
 
-
+# New Blog Page Handler class definition to hadle and render add_blog html page
+class NewBlogPage(Handler):
+    def get(self, post_id):
+        key = db.Key.from_path('Blog', int(post_id))
+        newBlog = db.get(key)
+        self.render("new_blog.html", blog = newBlog)
 
 app = webapp2.WSGIApplication([
     ('/', IndexPage),
     ('/blog', BlogPage),
-    ('/blog/addblog', AddBlogPage)
+    ('/blog/addblog', AddBlogPage),
+    ('/blog/([a-z0-9]+)', NewBlogPage)
+    
 ], debug=True)
