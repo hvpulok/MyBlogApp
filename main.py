@@ -120,6 +120,14 @@ class SignUpPage(Handler):
     def get(self):
         self.render("signup.html")
 
+    def post(self):
+        newUsername = self.request.get('username')
+        newEmail = self.request.get('email')
+        newPassword1 = self.request.get('password1')
+        newPassword2 = self.request.get('password2')
+        checkRememberMe = self.request.get('checkRememberMe')
+        result = "Result : %s %s %s %s %s" % (newUsername, newEmail, newPassword1, newPassword2, checkRememberMe)
+        self.write(result)
 
 # >>>>>>>>>>>>>>>>      Route definitions     <<<<<<<<<<<<<<<<<<<<<<<<
 app = webapp2.WSGIApplication([
