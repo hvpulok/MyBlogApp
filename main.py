@@ -17,6 +17,8 @@
 import os
 import webapp2
 import jinja2
+import re
+from string import letters
 # import urllib
 
 # code to initialize google datastore dB
@@ -25,6 +27,7 @@ from google.appengine.ext import db
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), autoescape=True)
 
+# >>>>>>>>>>>>>>>>      DB Model definitions     <<<<<<<<<<<<<<<<<<<<<<<<
 
 # Blog DB model
 class Blog(db.Model):
@@ -32,11 +35,10 @@ class Blog(db.Model):
     description = db.TextProperty(required= True)
     created = db.DateTimeProperty(auto_now_add = True)
     lastModified = db.DateTimeProperty(auto_now = True)
-    
-    def render(self):
-        self._render_text = self.description.replace('\n', '<br>')
-        return render_str("post.html", p = self)
 
+
+
+# >>>>>>>>>>>>>>>>   Page handler definitions   <<<<<<<<<<<<<<<<<<<<<<<<
 
 # Handler class definition to hadle and render html page request
 class Handler(webapp2.RequestHandler):
@@ -97,10 +99,11 @@ class SelectedBlogPage(Handler):
         SelectedBlog = db.get(key)
         self.render("selected_blog.html", blog = SelectedBlog)
 
+
+# >>>>>>>>>>>>>>>>      Route definitions     <<<<<<<<<<<<<<<<<<<<<<<<
 app = webapp2.WSGIApplication([
     ('/', IndexPage),
     ('/blog', BlogPage),
     ('/blog/addblog', AddBlogPage),
     ('/blog/([a-z0-9]+)', SelectedBlogPage)
-    
 ], debug=True)
