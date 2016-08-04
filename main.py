@@ -40,8 +40,7 @@ class User(db.Model):
     pw_hash = db.StringProperty(required = True)
     email = db.StringProperty()
 
-
-# Blog DB model
+# ========== Blog DB model ============
 class Blog(db.Model):
     title = db.StringProperty(required= True)
     description = db.TextProperty(required= True)
@@ -120,6 +119,19 @@ def check_secure_val(secure_val):
     if secure_val == make_secure_val(val):
         return val
 
+def make_salt(length = 5):
+    return ''.join(random.choice(letters) for x in xrange(length))
+
+def make_pw_hash(name, pw, salt = None):
+    if not salt:
+        salt = make_salt()
+    h = hashlib.sha256(name + pw + salt).hexdigest()
+    return '%s,%s' % (salt, h)
+
+def valid_pw(name, password, h):
+    salt = h.split(',')[0]
+    return h == make_pw_hash(name, password, salt)
+
 # ===== User handler definitions =====
 # ===== username duplicacy check =====
 def DuplicateUserFound(username):
@@ -127,6 +139,10 @@ def DuplicateUserFound(username):
     return foundUser
 
 def saveUser(username, pw_hash, email):
+    # hash password
+
+
+    #save user in dB
     user = User(name= username, pw_hash=pw_hash, email = email)
     key = user.put()
     return key
