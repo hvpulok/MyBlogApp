@@ -177,13 +177,17 @@ class SignUpPage(Handler):
             # resultText = "Thanks. Result : %s %s %s %s" % (result.key, result.username, result.pw_hash, result.email)
             self.write(result.name)
 
-        
+# Login page Handler
+class LoginPage(Handler):
+    def get(self):
+        self.render("login.html")        
         
 
 # >>>>>>>>>>>>>>>>      Route definitions     <<<<<<<<<<<<<<<<<<<<<<<<
 app = webapp2.WSGIApplication([
     ('/', IndexPage),
     ('/signup', SignUpPage),
+    ('/login', LoginPage),
     ('/blog', BlogPage),
     ('/blog/addblog', AddBlogPage),
     ('/blog/([a-z0-9]+)', SelectedBlogPage)
