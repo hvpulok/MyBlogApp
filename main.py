@@ -124,8 +124,8 @@ class SignUpPage(Handler):
 # >>>>>>>>>>>>>>>>      Route definitions     <<<<<<<<<<<<<<<<<<<<<<<<
 app = webapp2.WSGIApplication([
     ('/', IndexPage),
+    ('/signup', SignUpPage),
     ('/blog', BlogPage),
-    ('/blog/signup', SignUpPage),
     ('/blog/addblog', AddBlogPage),
     ('/blog/([a-z0-9]+)', SelectedBlogPage)
     
