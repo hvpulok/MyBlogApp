@@ -32,16 +32,14 @@ template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), autoescape=True)
 
 
-# >>>>>>>>>>>>>      Password Protection definitions     <<<<<<<<<<<<<<<<
-def make_secure_val(val):
-    return '%s|%s' % (val, hmac.new(secretCode, val).hexdigest())
-
-def check_secure_val(secure_val):
-    val = secure_val.split('|')[0]
-    if secure_val == make_secure_val(val):
-        return val
-
 # >>>>>>>>>>>>>>>>      DB Model definitions     <<<<<<<<<<<<<<<<<<<<<<<<
+
+# ========== User DB model ============
+class User(db.Model):
+    name = db.StringProperty(required = True)
+    pw_hash = db.StringProperty(required = True)
+    email = db.StringProperty()
+
 
 # Blog DB model
 class Blog(db.Model):
@@ -113,8 +111,27 @@ class SelectedBlogPage(Handler):
         SelectedBlog = db.get(key)
         self.render("selected_blog.html", blog = SelectedBlog)
 
+# >>>>>>>>>>>>>      Password Protection definitions     <<<<<<<<<<<<<<<<
+def make_secure_val(val):
+    return '%s|%s' % (val, hmac.new(secretCode, val).hexdigest())
+
+def check_secure_val(secure_val):
+    val = secure_val.split('|')[0]
+    if secure_val == make_secure_val(val):
+        return val
 
 # ===== User handler definitions =====
+# ===== username duplicacy check =====
+def DuplicateUserFound(username):
+    foundUser = User.all().filter('name =', username).get()
+    return foundUser
+
+def saveUser(username, pw_hash, email):
+    user = User(name= username, pw_hash=pw_hash, email = email)
+    key = user.put()
+    return key
+
+
 # signup page Handler
 class SignUpPage(Handler):
     def get(self):
@@ -128,12 +145,16 @@ class SignUpPage(Handler):
         checkRememberMe = self.request.get('checkRememberMe')
 
         # code to check password match
-        if newPassword1 == newPassword2 :
-            result = "Thanks. Result : %s %s %s %s %s" % (newUsername, newEmail, newPassword1, newPassword2, checkRememberMe)
-            self.write(result)
-        else:
+        if newPassword1 != newPassword2 :
             error= "Password did not match!"
             self.render("signup.html", username=newUsername, email=newEmail, checkRememberMe=checkRememberMe, error=error)
+        elif DuplicateUserFound(newUsername):
+            error= "Same Username Already Registered. Please Try different Username"
+            self.render("signup.html", username=newUsername, email=newEmail, checkRememberMe=checkRememberMe, error=error)
+        else:
+            # result = "Thanks. Result : %s %s %s %s %s" % (newUsername, newEmail, newPassword1, newPassword2, checkRememberMe)
+            result = saveUser(newUsername, newPassword1, newEmail)
+            self.write(result)
 
         
         
