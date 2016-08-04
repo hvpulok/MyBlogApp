@@ -31,6 +31,16 @@ from google.appengine.ext import db
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), autoescape=True)
 
+
+# >>>>>>>>>>>>>      Password Protection definitions     <<<<<<<<<<<<<<<<
+def make_secure_val(val):
+    return '%s|%s' % (val, hmac.new(secretCode, val).hexdigest())
+
+def check_secure_val(secure_val):
+    val = secure_val.split('|')[0]
+    if secure_val == make_secure_val(val):
+        return val
+
 # >>>>>>>>>>>>>>>>      DB Model definitions     <<<<<<<<<<<<<<<<<<<<<<<<
 
 # Blog DB model
@@ -102,6 +112,8 @@ class SelectedBlogPage(Handler):
         key = db.Key.from_path('Blog', int(post_id))
         SelectedBlog = db.get(key)
         self.render("selected_blog.html", blog = SelectedBlog)
+
+
 # ===== User handler definitions =====
 # signup page Handler
 class SignUpPage(Handler):
