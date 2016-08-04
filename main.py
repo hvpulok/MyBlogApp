@@ -23,6 +23,8 @@ import hashlib
 import hmac
 # import urllib
 
+secretCode = "Life is Beautiful"
+
 # code to initialize google datastore dB
 from google.appengine.ext import db
 
@@ -63,7 +65,7 @@ class IndexPage(Handler):
         self.render_main()
 
    
-
+# ===== Blog  handler definitions =====
 # Blog Page Handler class definition to hadle and render Blog html
 class BlogPage(Handler):
     def render_main(self):
@@ -100,12 +102,19 @@ class SelectedBlogPage(Handler):
         key = db.Key.from_path('Blog', int(post_id))
         SelectedBlog = db.get(key)
         self.render("selected_blog.html", blog = SelectedBlog)
+# ===== User handler definitions =====
+# signup page Handler
+class SignUpPage(Handler):
+    def get(self):
+        self.render("signup.html")
 
 
 # >>>>>>>>>>>>>>>>      Route definitions     <<<<<<<<<<<<<<<<<<<<<<<<
 app = webapp2.WSGIApplication([
     ('/', IndexPage),
     ('/blog', BlogPage),
+    ('/blog/signup', SignUpPage),
     ('/blog/addblog', AddBlogPage),
     ('/blog/([a-z0-9]+)', SelectedBlogPage)
+    
 ], debug=True)
