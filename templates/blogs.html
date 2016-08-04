@@ -12,9 +12,10 @@
     {% for blog in blogs %}
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title">{{blog.title}} 
+                <h3 class="panel-title">
+                    <a href="/blog/{{blog.key().id()}}">{{blog.title}}</a>
                     <span class="pull-right">
-                            Blog Id- {{blog.key().id()}}
+                        <a href="/blog/{{blog.key().id()}}">Blog Id- {{blog.key().id()}}</a>
                             <!--Blog Id- {{blog.key()}}-->
                     </span>
                 </h3>

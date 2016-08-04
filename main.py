@@ -91,16 +91,16 @@ class AddBlogPage(Handler):
             self.render("add_blog.html", title=newBlogTitle, description=newBlogDescription, error=error)
 
 # New Blog Page Handler class definition to hadle and render add_blog html page
-class NewBlogPage(Handler):
+class SelectedBlogPage(Handler):
     def get(self, post_id):
         key = db.Key.from_path('Blog', int(post_id))
-        newBlog = db.get(key)
-        self.render("new_blog.html", blog = newBlog)
+        SelectedBlog = db.get(key)
+        self.render("selected_blog.html", blog = SelectedBlog)
 
 app = webapp2.WSGIApplication([
     ('/', IndexPage),
     ('/blog', BlogPage),
     ('/blog/addblog', AddBlogPage),
-    ('/blog/([a-z0-9]+)', NewBlogPage)
+    ('/blog/([a-z0-9]+)', SelectedBlogPage)
     
 ], debug=True)
