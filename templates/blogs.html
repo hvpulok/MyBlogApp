@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base.html" %} 
 
 {% block content %}
 
@@ -8,6 +8,23 @@
     </div>
 </div>
 
+<div class="container">
+    {% for blog in blogs %}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{blog.title}}</h3>
+            </div>
+            <div class="panel-body">
+                <!--<pre class="blog-description">
+                    {{blog.description}}
+                </pre>-->
+                <p class="blog-description">
+                    {{blog.description}}
+                </p>
+            </div>
+        </div>
+    {% endfor %} 
+</div>
 
 
 

@@ -57,7 +57,8 @@ class IndexPage(Handler):
 # Blog Page Handler class definition to hadle and render Blog html
 class BlogPage(Handler):
     def render_main(self, title="", description="", error=""):
-        self.render("blogs.html", title=title, description=description, error=error)
+        blogs = db.GqlQuery("SELECT * FROM Blog ORDER BY created DESC")
+        self.render("blogs.html", title=title, description=description, error=error, blogs = blogs)
 
     def get(self):
         self.render_main()
