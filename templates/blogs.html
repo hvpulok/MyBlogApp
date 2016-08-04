@@ -12,14 +12,20 @@
     {% for blog in blogs %}
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title">{{blog.title}}</h3>
+                <h3 class="panel-title">{{blog.title}} 
+                    <span class="pull-right">
+                            Blog Id- {{blog.key().id()}}
+                    </span>
+                </h3>
             </div>
             <div class="panel-body">
                 <!--<pre class="blog-description">
                     {{blog.description}}
                 </pre>-->
+                <p>Created Date: {{blog.created.strftime("%b %d, %Y")}}</p>
+                <hr>
                 <p class="blog-description">
-                    {{blog.description}}
+                    {{blog.description.replace('\n', '<br>') | safe}}
                 </p>
             </div>
         </div>

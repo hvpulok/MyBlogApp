@@ -30,6 +30,11 @@ class Blog(db.Model):
     title = db.StringProperty(required= True)
     description = db.TextProperty(required= True)
     created = db.DateTimeProperty(auto_now_add = True)
+    lastModified = db.DateTimeProperty(auto_now = True)
+
+    def render(self):
+        self._render_text = self.description.replace('\n', '<br>')
+        return render_str("post.html", p = self)
 
 
 # Handler class definition to hadle and render html page request
@@ -56,9 +61,9 @@ class IndexPage(Handler):
 
 # Blog Page Handler class definition to hadle and render Blog html
 class BlogPage(Handler):
-    def render_main(self, title="", description="", error=""):
+    def render_main(self):
         blogs = db.GqlQuery("SELECT * FROM Blog ORDER BY created DESC")
-        self.render("blogs.html", title=title, description=description, error=error, blogs = blogs)
+        self.render("blogs.html", blogs = blogs)
 
     def get(self):
         self.render_main()
@@ -74,6 +79,7 @@ class AddBlogPage(Handler):
     def post(self):
         newBlogTitle =  self.request.get('title')
         newBlogDescription =  self.request.get('description')
+        newBlogDescription = newBlogDescription.replace('\n', '<br>')
 
         if newBlogTitle and newBlogDescription:
             post = Blog(title= newBlogTitle, description=newBlogDescription)
