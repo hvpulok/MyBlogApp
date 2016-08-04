@@ -19,6 +19,8 @@ import webapp2
 import jinja2
 import re
 from string import letters
+import hashlib
+import hmac
 # import urllib
 
 # code to initialize google datastore dB
