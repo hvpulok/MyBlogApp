@@ -63,6 +63,14 @@ class BlogPage(Handler):
     def get(self):
         self.render_main()
 
+# Add Blog Page Handler class definition to hadle and render add_blog html page
+class AddBlogPage(Handler):
+    def render_main(self, title="", description="", error=""):
+        self.render("add_blog.html", title=title, description=description, error=error)
+
+    def get(self):
+        self.render_main()
+
     def post(self):
         newBlogTitle =  self.request.get('title')
         newBlogDescription =  self.request.get('description')
@@ -74,16 +82,6 @@ class BlogPage(Handler):
         else:
             error= "We need both a title and some description of the new blog."
             self.render("add_blog.html", title=newBlogTitle, description=newBlogDescription, error=error)
-
-
-# Add Blog Page Handler class definition to hadle and render add_blog html page
-class AddBlogPage(Handler):
-    def render_main(self):
-        self.render("add_blog.html")
-
-    def get(self):
-        self.render_main()
-
 
 
 
