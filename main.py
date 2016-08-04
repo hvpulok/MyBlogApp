@@ -126,8 +126,17 @@ class SignUpPage(Handler):
         newPassword1 = self.request.get('password1')
         newPassword2 = self.request.get('password2')
         checkRememberMe = self.request.get('checkRememberMe')
-        result = "Result : %s %s %s %s %s" % (newUsername, newEmail, newPassword1, newPassword2, checkRememberMe)
-        self.write(result)
+
+        # code to check password match
+        if newPassword1 == newPassword2 :
+            result = "Thanks. Result : %s %s %s %s %s" % (newUsername, newEmail, newPassword1, newPassword2, checkRememberMe)
+            self.write(result)
+        else:
+            error= "Password did not match!"
+            self.render("signup.html", username=newUsername, email=newEmail, checkRememberMe=checkRememberMe, error=error)
+
+        
+        
 
 # >>>>>>>>>>>>>>>>      Route definitions     <<<<<<<<<<<<<<<<<<<<<<<<
 app = webapp2.WSGIApplication([
