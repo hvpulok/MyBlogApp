@@ -190,6 +190,11 @@ class LoginPage(Handler):
         u = User.all().filter('name =', username).get()
         if u and valid_pw(username, password, u.pw_hash):
             self.write("successfully logged in")
+            # code to set secure cookie
+            val = str(u.key().id())
+            cookie_val = make_secure_val(val)
+            self.response.headers.add_header('Set-Cookie', '%s=%s; Path=/' % ('user_id', cookie_val))
+
         else:
             error= "Login Failed due to Username/Password Mismatch"
             self.render("login.html", username=username, checkRememberMe=checkRememberMe, error=error)
