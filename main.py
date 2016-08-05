@@ -214,7 +214,13 @@ class LoginPage(Handler):
             error= "Login Failed due to Username/Password Mismatch"
             self.render("login.html", username=username, checkRememberMe=checkRememberMe, error=error)
 
-
+class Logout(Handler):
+    def get(self):
+        # self.logout()
+        # clear user-id cookie
+        self.response.headers.add_header('Set-Cookie', 'user_id=; Path=/')
+        # redirect to blog page
+        self.redirect('/blog')
 
 
 
@@ -223,6 +229,7 @@ app = webapp2.WSGIApplication([
     ('/', IndexPage),
     ('/signup', SignUpPage),
     ('/login', LoginPage),
+    ('/logout', Logout),
     ('/blog', BlogPage),
     ('/blog/addblog', AddBlogPage),
     ('/blog/([a-z0-9]+)', SelectedBlogPage)
