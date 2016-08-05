@@ -90,6 +90,11 @@ class Handler(webapp2.RequestHandler):
     def initialize(self, *a, **kw):
         webapp2.RequestHandler.initialize(self, *a, **kw)
 
+    # This function is to set cookie of loggin User
+    def performLogin(self, val):
+        cookie_val = make_secure_val(val)
+        self.response.headers.add_header('Set-Cookie', '%s=%s; Path=/' % ('user_id', cookie_val))
+        
     def read_secure_cookie(self, name):
         cookie_val = self.request.cookies.get(name)
         return cookie_val and check_secure_val(cookie_val)
@@ -224,10 +229,9 @@ class LoginPage(Handler):
         if u and valid_pw(username, password, u.pw_hash):
             # code to set secure cookie
             val = str(u.key().id())
-            cookie_val = make_secure_val(val)
-            self.response.headers.add_header('Set-Cookie', '%s=%s; Path=/' % ('user_id', cookie_val))
+            self.performLogin(val)
             self.redirect('/blog')
-            
+
         else:
             error= "Login Failed due to Username/Password Mismatch"
             self.render("login.html", username=username, checkRememberMe=checkRememberMe, error=error)
