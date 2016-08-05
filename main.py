@@ -184,11 +184,7 @@ def saveUser(username, password, email):
     #save user in dB
     savedUser = User(name= username, pw_hash=pw_hash, email = email)
     key = savedUser.put()
-    return User(
-            key = key,
-            name = username,
-            pw_hash = pw_hash,
-            email = email)
+    return key
 
 
 # signup page Handler
@@ -211,9 +207,11 @@ class SignUpPage(Handler):
             error= "Same Username Already Registered. Please Try different Username"
             self.render("signup.html", username=newUsername, email=newEmail, checkRememberMe=checkRememberMe, error=error)
         else:
-            result = saveUser(newUsername, newPassword1, newEmail)
-            # resultText = "Thanks. Result : %s %s %s %s" % (result.key, result.username, result.pw_hash, result.email)
-            self.write(result.name)
+            key = saveUser(newUsername, newPassword1, newEmail)
+            val = str(key.id())
+            self.performLogin(val)
+            self.redirect('/blog')
+
 
 # Login page Handler
 class LoginPage(Handler):
