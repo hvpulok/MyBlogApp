@@ -49,6 +49,29 @@ class Blog(db.Model):
     lastModified = db.DateTimeProperty(auto_now = True)
 
 
+# >>>>>>>>>>>>>      Password Protection definitions     <<<<<<<<<<<<<<<<
+def make_secure_val(val):
+    return '%s|%s' % (val, hmac.new(secretCode, val).hexdigest())
+
+def check_secure_val(secure_val):
+    val = secure_val.split('|')[0]
+    if secure_val == make_secure_val(val):
+        return val
+
+def make_salt(length = 5):
+    return ''.join(random.choice(letters) for x in xrange(length))
+
+def make_pw_hash(name, pw, salt = None):
+    if not salt:
+        salt = make_salt()
+    h = hashlib.sha256(name + pw + salt).hexdigest()
+    return '%s,%s' % (salt, h)
+
+def valid_pw(name, password, h):
+    salt = h.split(',')[0]
+    return h == make_pw_hash(name, password, salt)
+
+
 
 # >>>>>>>>>>>>>>>>   Page handler definitions   <<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -64,6 +87,13 @@ class Handler(webapp2.RequestHandler):
     def render(self, template, **kw):
         self.write(self.render_str(template, **kw))
 
+    def initialize(self, *a, **kw):
+        webapp2.RequestHandler.initialize(self, *a, **kw)
+
+    def read_secure_cookie(self, name):
+        cookie_val = self.request.cookies.get(name)
+        return cookie_val and check_secure_val(cookie_val)
+
 # Index Page Handler class definition to hadle and render Index html page request
 class IndexPage(Handler):
     def render_main(self):
@@ -78,10 +108,17 @@ class IndexPage(Handler):
 class BlogPage(Handler):
     def render_main(self):
         blogs = db.GqlQuery("SELECT * FROM Blog ORDER BY created DESC")
-        self.render("blogs.html", blogs = blogs)
+        uid = self.read_secure_cookie('user_id')
+        if uid:
+            key = db.Key.from_path('User', int(uid))
+            user = db.get(key)
+            self.render("blogs.html", blogs = blogs, currentUser= user.name)
+        else:
+            self.render("blogs.html", blogs = blogs, currentUser= "")
 
     def get(self):
         self.render_main()
+
 
 # Add Blog Page Handler class definition to hadle and render add_blog html page
 class AddBlogPage(Handler):
@@ -110,28 +147,6 @@ class SelectedBlogPage(Handler):
         key = db.Key.from_path('Blog', int(post_id))
         SelectedBlog = db.get(key)
         self.render("selected_blog.html", blog = SelectedBlog)
-
-# >>>>>>>>>>>>>      Password Protection definitions     <<<<<<<<<<<<<<<<
-def make_secure_val(val):
-    return '%s|%s' % (val, hmac.new(secretCode, val).hexdigest())
-
-def check_secure_val(secure_val):
-    val = secure_val.split('|')[0]
-    if secure_val == make_secure_val(val):
-        return val
-
-def make_salt(length = 5):
-    return ''.join(random.choice(letters) for x in xrange(length))
-
-def make_pw_hash(name, pw, salt = None):
-    if not salt:
-        salt = make_salt()
-    h = hashlib.sha256(name + pw + salt).hexdigest()
-    return '%s,%s' % (salt, h)
-
-def valid_pw(name, password, h):
-    salt = h.split(',')[0]
-    return h == make_pw_hash(name, password, salt)
 
 # ===== User handler definitions =====
 # ===== username duplicacy check =====
@@ -189,12 +204,12 @@ class LoginPage(Handler):
 
         u = User.all().filter('name =', username).get()
         if u and valid_pw(username, password, u.pw_hash):
-            self.write("successfully logged in")
             # code to set secure cookie
             val = str(u.key().id())
             cookie_val = make_secure_val(val)
             self.response.headers.add_header('Set-Cookie', '%s=%s; Path=/' % ('user_id', cookie_val))
-
+            self.redirect('/blog')
+            
         else:
             error= "Login Failed due to Username/Password Mismatch"
             self.render("login.html", username=username, checkRememberMe=checkRememberMe, error=error)
