@@ -94,10 +94,21 @@ class Handler(webapp2.RequestHandler):
         cookie_val = self.request.cookies.get(name)
         return cookie_val and check_secure_val(cookie_val)
 
+    def checkCurrentUser (self):
+        uid = self.read_secure_cookie('user_id')
+        if uid:
+            key = db.Key.from_path('User', int(uid))
+            user = db.get(key)
+            return user
+
 # Index Page Handler class definition to hadle and render Index html page request
 class IndexPage(Handler):
     def render_main(self):
-        self.render("index.html")
+        currentUser = self.checkCurrentUser()
+        if currentUser:
+            self.render("index.html", currentUser=currentUser.name)
+        else:
+            self.render("index.html", currentUser="")
 
     def get(self):
         self.render_main()
@@ -108,11 +119,9 @@ class IndexPage(Handler):
 class BlogPage(Handler):
     def render_main(self):
         blogs = db.GqlQuery("SELECT * FROM Blog ORDER BY created DESC")
-        uid = self.read_secure_cookie('user_id')
-        if uid:
-            key = db.Key.from_path('User', int(uid))
-            user = db.get(key)
-            self.render("blogs.html", blogs = blogs, currentUser= user.name)
+        currentUser = self.checkCurrentUser()
+        if currentUser:
+            self.render("blogs.html", blogs = blogs, currentUser= currentUser.name)
         else:
             self.render("blogs.html", blogs = blogs, currentUser= "")
 
@@ -123,7 +132,11 @@ class BlogPage(Handler):
 # Add Blog Page Handler class definition to hadle and render add_blog html page
 class AddBlogPage(Handler):
     def render_main(self, title="", description="", error=""):
-        self.render("add_blog.html", title=title, description=description, error=error)
+        currentUser = self.checkCurrentUser()
+        if currentUser:
+            self.render("add_blog.html", title=title, description=description, error=error, currentUser=currentUser.name)
+        else:
+            self.render("add_blog.html", title=title, description=description, error=error, currentUser="")
 
     def get(self):
         self.render_main()
@@ -146,7 +159,12 @@ class SelectedBlogPage(Handler):
     def get(self, post_id):
         key = db.Key.from_path('Blog', int(post_id))
         SelectedBlog = db.get(key)
-        self.render("selected_blog.html", blog = SelectedBlog)
+
+        currentUser = self.checkCurrentUser()
+        if currentUser:
+            self.render("selected_blog.html", blog = SelectedBlog, currentUser=currentUser.name)
+        else:
+            self.render("selected_blog.html", blog = SelectedBlog, currentUser="")
 
 # ===== User handler definitions =====
 # ===== username duplicacy check =====
