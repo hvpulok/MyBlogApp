@@ -186,8 +186,16 @@ class LoginPage(Handler):
         username = self.request.get('username')
         password = self.request.get('password')
         checkRememberMe = self.request.get('checkRememberMe')
-        self.write(username)
-        # self.write(password)
+
+        u = User.all().filter('name =', username).get()
+        if u and valid_pw(username, password, u.pw_hash):
+            self.write("successfully logged in")
+        else:
+            error= "Login Failed due to Username/Password Mismatch"
+            self.render("login.html", username=username, checkRememberMe=checkRememberMe, error=error)
+
+
+
 
 
 # >>>>>>>>>>>>>>>>      Route definitions     <<<<<<<<<<<<<<<<<<<<<<<<
