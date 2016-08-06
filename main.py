@@ -278,30 +278,14 @@ class Like(Handler):
             self.write("----BlogKey:")
             self.write(blogKey)
 
-            # ==============
-            # code to retrieve blog by its key
-            # blog = db.get(blogKey)
-            # self.write(blog.title)
-            #====================
             #check duplicacy
             # foundUser = User.all().filter('name =', username).get()
 
             #Save like data in db
-            # account = Comment(comment='Sandy', blogkey="1234")
             savedLike = LikeDb(blogRef= str(blogKey), userRef= str(userKey))
             likeKey = savedLike.put()
 
-            # savedLike = db.get(likeKey)
-            # self.write("=======:savedLike.blogkey")
-            # self.write(savedLike.blogRef)
-            # ref_blog_key = savedLike.blogRef
-            # ref_blog_title = db.get(ref_blog_key).title
-            # self.write("=======:savedLike.blogkey=====Title")
-            # self.write(ref_blog_title)
-
-
             # search liked blog based on blog Key in Blog dB
-
             refblog = db.get(blogKey)
             refblogLikeCount = refblog.likeCount
             if refblogLikeCount:
@@ -311,16 +295,11 @@ class Like(Handler):
 
             refblog.likeCount = refblogLikeCount
             key = refblog.put()
-            self.write("=======:Like COunt : ==")
-            self.write(refblogLikeCount)
             self.redirect("/blog/%s" % key.id())
-
-            # increase like count
-            # update like dB
         else:
-            # self.redirect('/login', error="Please login First.")
-            self.render('login.html', alert="Please login First.")
             #if user not logged in ask user to Login
+            self.render('login.html', alert="Please login First.")
+            
 
 
 
@@ -334,6 +313,7 @@ app = webapp2.WSGIApplication([
     ('/blog', BlogPage),
     ('/blog/addblog', AddBlogPage),
     ('/blog/([a-z0-9]+)', SelectedBlogPage),
-    ('/blog/[a-z0-9]+/like', Like)
+    ('/blog/[a-z0-9]+/like', Like),
+    # ('/blog/[a-z0-9]+/addcomment', AddComment)
     
 ], debug=True)
