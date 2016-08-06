@@ -249,11 +249,28 @@ class LoginPage(Handler):
 
 class Logout(Handler):
     def get(self):
-        # self.logout()
         # clear user-id cookie
         self.response.headers.add_header('Set-Cookie', 'user_id=; Path=/')
         # redirect to blog page
         self.redirect('/blog')
+
+class Like(Handler):
+    def get(self):
+        # self.write("This is like page")
+
+        # get Userid
+        currentUser = self.checkCurrentUser()
+        if currentUser:
+            # self.render("index.html", currentUser=currentUser.name)
+            self.write("This is like page ---")
+            self.write(currentUser.key)
+        else:
+            self.redirect('/login')
+            #if user not logged in ask user to Login
+        # get selected Blog
+        # search like dB based on blog Key
+        # increase like count
+        # update like dB
 
 
 
@@ -265,6 +282,7 @@ app = webapp2.WSGIApplication([
     ('/logout', Logout),
     ('/blog', BlogPage),
     ('/blog/addblog', AddBlogPage),
-    ('/blog/([a-z0-9]+)', SelectedBlogPage)
+    ('/blog/([a-z0-9]+)', SelectedBlogPage),
+    ('/blog/[a-z0-9]+/like', Like)
     
 ], debug=True)
