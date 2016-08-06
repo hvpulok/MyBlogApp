@@ -37,7 +37,7 @@
                     <form id="formLikedBlog" action="/blog/{{blog.key().id()}}/like" method="POST">
                         <div class="col-xs-6">
                             <a id="linkLikedBlog"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Like</a>
-                            <a id="linkLikedBlog"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> {{blog.likeCount}}</a>
+                            <a><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> {{blog.likeCount}}</a>
                             <input type="text" name="likedBlog" value="{{blog.key()}}" hidden>
                         </div>
                     </form>
