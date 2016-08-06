@@ -51,9 +51,9 @@ class Blog(db.Model):
 # ========== Like DB model ============
 class Like(db.Model):
     count = db.IntegerProperty()
-    userkey = StringProperty()
+    userkey = db.StringProperty()
     likeDate = db.DateTimeProperty(auto_now_add = True)
-    
+
 # ========== Comment DB model ============
 class Comment(db.Model):
     comment = db.StringProperty()
