@@ -263,14 +263,16 @@ class Like(Handler):
         if currentUser:
             # self.render("index.html", currentUser=currentUser.name)
             self.write("This is like page ---")
-            self.write(currentUser.key)
+            self.write(currentUser.key())
+            # get selected Blog
+            # search like dB based on blog Key
+            # increase like count
+            # update like dB
         else:
-            self.redirect('/login')
+            # self.redirect('/login', error="Please login First.")
+            self.render('login.html', alert="Please login First.")
             #if user not logged in ask user to Login
-        # get selected Blog
-        # search like dB based on blog Key
-        # increase like count
-        # update like dB
+
 
 
 
