@@ -268,34 +268,37 @@ class Like(Handler):
             # get username and user key
             userKey = currentUser.key()
             username = currentUser.name
-            self.write("This is like page ---")
-            self.write(userKey)
-            self.write("----username:")
-            self.write(username)
 
             # get selected Blog
             blogKey = self.request.get('likedBlog')
-            self.write("----BlogKey:")
-            self.write(blogKey)
 
+            userKey = str(userKey)
+            blogKey = str(blogKey)
+            self.write(userKey)
             #check duplicacy
-            # foundUser = User.all().filter('name =', username).get()
+            foundUser = LikeDb.all().filter('userRef =', userKey).get()
+            foundBlog = LikeDb.all().filter('blogRef =', blogKey).get()
 
-            #Save like data in db
-            savedLike = LikeDb(blogRef= str(blogKey), userRef= str(userKey))
-            likeKey = savedLike.put()
+            if foundBlog and foundUser:
+                self.write("=========found")
+            else: 
+                self.write("xxxxxxxx     Not Found")
 
-            # search liked blog based on blog Key in Blog dB
-            refblog = db.get(blogKey)
-            refblogLikeCount = refblog.likeCount
-            if refblogLikeCount:
-                refblogLikeCount= int(refblogLikeCount) + 1
-            else:
-                refblogLikeCount= 1
+            # #Save like data in db
+            # savedLike = LikeDb(blogRef= str(blogKey), userRef= str(userKey))
+            # likeKey = savedLike.put()
 
-            refblog.likeCount = refblogLikeCount
-            key = refblog.put()
-            self.redirect("/blog/%s" % key.id())
+            # # search liked blog based on blog Key in Blog dB
+            # refblog = db.get(blogKey)
+            # refblogLikeCount = refblog.likeCount
+            # if refblogLikeCount:
+            #     refblogLikeCount= int(refblogLikeCount) + 1
+            # else:
+            #     refblogLikeCount= 1
+
+            # refblog.likeCount = refblogLikeCount
+            # key = refblog.put()
+            # self.redirect("/blog/%s" % key.id())
         else:
             #if user not logged in ask user to Login
             self.render('login.html', alert="Please login First.")
