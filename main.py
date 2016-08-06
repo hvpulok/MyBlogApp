@@ -47,12 +47,12 @@ class Blog(db.Model):
     description = db.TextProperty(required= True)
     created = db.DateTimeProperty(auto_now_add = True)
     lastModified = db.DateTimeProperty(auto_now = True)
+    likeCount = db.IntegerProperty()
 
 # ========== Like DB model ============
-class Like(db.Model):
-    count = db.IntegerProperty()
-    blogkey = db.StringProperty()
-    userkey = db.StringProperty()
+class LikeDb(db.Model):
+    blogRef = db.StringProperty(required= True)
+    userRef = db.StringProperty(required= True)
     likeDate = db.DateTimeProperty(auto_now_add = True)
 
 # ========== Comment DB model ============
@@ -278,9 +278,29 @@ class Like(Handler):
             self.write("----BlogKey:")
             self.write(blogKey)
 
+            # ==============
+            # code to retrieve blog by its key
+            # blog = db.get(blogKey)
+            # self.write(blog.title)
+            #====================
+            #check duplicacy
+            # foundUser = User.all().filter('name =', username).get()
+
+            #Save like data in db
+            # account = Comment(comment='Sandy', blogkey="1234")
+            savedLike = LikeDb(blogRef= str(blogKey), userRef= str(userKey))
+            likeKey = savedLike.put()
+
+            savedLike = db.get(likeKey)
+            self.write("=======:savedLike.blogkey")
+            self.write(savedLike.blogRef)
+            ref_blog_key = savedLike.blogRef
+            ref_blog_title = db.get(ref_blog_key).title
+            self.write("=======:savedLike.blogkey=====Title")
+            self.write(ref_blog_title)
 
 
-            # search like dB based on blog Key
+            # search liked blog based on blog Key in Blog dB
             # increase like count
             # update like dB
         else:
