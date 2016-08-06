@@ -5,22 +5,28 @@
 <div class="container">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title">{{blog.title}} 
-                    <span class="pull-right">
-                            Blog Id- {{blog.key().id()}}
-                            <!--Blog Id- {{blog.key()}}-->
-                    </span>
+                <h3 class="panel-title">
+                    <div class="row">
+                        <div class="col-xs-6">{{blog.title}}</div>
+                        <div class="col-xs-6 text-right"> Post Date: {{blog.created.strftime("%b %d, %Y")}}</div>
+                    </div>
                 </h3>
             </div>
             <div class="panel-body">
-                <!--<pre class="blog-description">
-                    {{blog.description}}
-                </pre>-->
-                <p>Created Date: {{blog.created.strftime("%b %d, %Y")}}</p>
-                <hr>
-                <p class="blog-description">
-                    {{blog.description.replace('\n', '<br>') | safe}}
-                </p>
+                <div class="media">
+                    <div class="media-left">
+                        <img class="media-object" src="http://www.elektroserve.com.my/wp-content/uploads/2015/03/icon1.png" alt="user icon" height="120" width="120">
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">
+                            {% if currentUser: %}
+                                <span>Author: {{currentUser}}</span>
+                                <hr>
+                            {% endif %}
+                        </h4>
+                        {{blog.description.replace('\n', '<br>') | safe}}
+                    </div>
+                </div>
             </div>
         </div>
 </div>

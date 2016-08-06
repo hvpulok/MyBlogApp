@@ -2,3 +2,33 @@
     color: darkred;
     font-weight: 700;
 }
+
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+.panel-title a{
+    color: white;
+}
+
+.panel-title a:hover{
+    color: lightcyan;
+}
+
+.panel-footer a{
+    color: darkslategray;
+    padding: 8px 15px;
+}
+
+.panel-footer a:hover{
+    color: white;
+    background-color: darkslategray;
+    border-radius: 5px; 
+    text-decoration: none;
+}
+
+
