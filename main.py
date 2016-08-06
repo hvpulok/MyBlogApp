@@ -175,7 +175,7 @@ class AddBlogPage(Handler):
                 self.render("add_blog.html", title=newBlogTitle, description=newBlogDescription, error=error)
         else:
             self.render('login.html', alert="Please login First.")
-            
+
 # New Blog Page Handler class definition to hadle and render add_blog html page
 class SelectedBlogPage(Handler):
     def get(self, post_id):
@@ -259,16 +259,27 @@ class Logout(Handler):
         self.redirect('/blog')
 
 class Like(Handler):
-    def get(self):
+    def post(self):
         # self.write("This is like page")
 
         # get Userid
         currentUser = self.checkCurrentUser()
         if currentUser:
-            # self.render("index.html", currentUser=currentUser.name)
+            # get username and user key
+            userKey = currentUser.key()
+            username = currentUser.name
             self.write("This is like page ---")
-            self.write(currentUser.key())
+            self.write(userKey)
+            self.write("----username:")
+            self.write(username)
+
             # get selected Blog
+            blogKey = self.request.get('likedBlog')
+            self.write("----BlogKey:")
+            self.write(blogKey)
+
+
+
             # search like dB based on blog Key
             # increase like count
             # update like dB
