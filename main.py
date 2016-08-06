@@ -154,24 +154,28 @@ class AddBlogPage(Handler):
         if currentUser:
             self.render("add_blog.html", title=title, description=description, error=error, currentUser=currentUser.name)
         else:
-            self.render("add_blog.html", title=title, description=description, error=error, currentUser="")
+            self.render('login.html', alert="Please login First.")
 
     def get(self):
         self.render_main()
 
     def post(self):
-        newBlogTitle =  self.request.get('title')
-        newBlogDescription =  self.request.get('description')
-        newBlogDescription = newBlogDescription.replace('\n', '<br>')
+        currentUser = self.checkCurrentUser()
+        if currentUser:
+            newBlogTitle =  self.request.get('title')
+            newBlogDescription =  self.request.get('description')
+            newBlogDescription = newBlogDescription.replace('\n', '<br>')
 
-        if newBlogTitle and newBlogDescription:
-            post = Blog(title= newBlogTitle, description=newBlogDescription)
-            key = post.put()
-            self.redirect("/blog/%s" % key.id())
+            if newBlogTitle and newBlogDescription:
+                post = Blog(title= newBlogTitle, description=newBlogDescription)
+                key = post.put()
+                self.redirect("/blog/%s" % key.id())
+            else:
+                error= "We need both a title and some description of the new blog."
+                self.render("add_blog.html", title=newBlogTitle, description=newBlogDescription, error=error)
         else:
-            error= "We need both a title and some description of the new blog."
-            self.render("add_blog.html", title=newBlogTitle, description=newBlogDescription, error=error)
-
+            self.render('login.html', alert="Please login First.")
+            
 # New Blog Page Handler class definition to hadle and render add_blog html page
 class SelectedBlogPage(Handler):
     def get(self, post_id):
