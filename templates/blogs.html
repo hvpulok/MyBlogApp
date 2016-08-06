@@ -34,8 +34,16 @@
             </div>
             <div class="panel-footer panel-primary">
                 <div class="row">
-                    <div class="col-xs-6"><a href="/blog/{{blog.key().id()}}/like"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Like</a></div>
-                    <div class="col-xs-6 text-right"><a href="#"><i class="fa fa-comments" aria-hidden="true"></i> Comment</a></div>
+                    <form id="formLikedBlog" action="/blog/{{blog.key().id()}}/like" method="POST">
+                        <div class="col-xs-6">
+                            <a id="linkLikedBlog"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Like</a>
+                            <a id="linkLikedBlog"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> {{blog.likeCount}}</a>
+                            <input type="text" name="likedBlog" value="{{blog.key()}}" hidden>
+                        </div>
+                    </form>
+                        <div class="col-xs-6 text-right">
+                            <a href="#"><i class="fa fa-comments" aria-hidden="true"></i> Comment</a>
+                        </div>
                 </div>
             </div>
         </div>
