@@ -48,6 +48,17 @@ class Blog(db.Model):
     created = db.DateTimeProperty(auto_now_add = True)
     lastModified = db.DateTimeProperty(auto_now = True)
 
+# ========== Like DB model ============
+class Like(db.Model):
+    count = db.IntegerProperty()
+    userkey = StringProperty()
+    likeDate = db.DateTimeProperty(auto_now_add = True)
+    
+# ========== Comment DB model ============
+class Comment(db.Model):
+    comment = db.StringProperty()
+    userkey = db.StringProperty()
+    commentDate = db.DateTimeProperty(auto_now_add = True)
 
 # >>>>>>>>>>>>>      Password Protection definitions     <<<<<<<<<<<<<<<<
 def make_secure_val(val):
