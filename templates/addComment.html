@@ -4,20 +4,14 @@
 <div class="container">
     <div class="panel panel-primary">
     <div class="panel-heading">
-        <h3 class="panel-title">Add Comment</h3>
+        <h3 class="panel-title">Add Comment for "{{blog.title}}"</h3>
     </div>
     <div class="panel-body">
-        <form action="/blog/{{blog.key().id()}}/addcomment" method="POST" class="form-horizontal">
+        <form action="/blog/addcomment/{{blog.key().id()}}" method="POST" class="form-horizontal">
             <div class="form-group ">
-                <label class="col-sm-2 control-label" for="formGroupInputLarge">Title</label>
+                <label class="col-sm-2 control-label" for="formGroupInputLarge">Comment</label>
                 <div class="col-sm-10">
-                    <input name="title" class="form-control" type="text" id="blog-title" placeholder="Blog Title" autofocus required value= "{{title}}">
-                </div>
-            </div>
-            <div class="form-group ">
-                <label class="col-sm-2 control-label" for="formGroupInputLarge">Description</label>
-                <div class="col-sm-10">
-                    <textarea name="description" class="form-control" rows="10">{{description}}</textarea>
+                    <textarea name="comment" class="form-control" rows="3">{{comment}}</textarea>
                 </div>
             </div>
             <div class="form-group">

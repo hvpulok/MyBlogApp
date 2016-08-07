@@ -298,9 +298,19 @@ class Like(Handler):
             self.render('login.html', alert="Please login First.")
             
 class AddComment(Handler):
-    def get(self):
-        self.write("This is comment page")
+    def get(self, post_id):
+        key = db.Key.from_path('Blog', int(post_id))
+        SelectedBlog = db.get(key)
 
+        currentUser = self.checkCurrentUser()
+        if currentUser:
+            self.render("addComment.html", blog = SelectedBlog, currentUser=currentUser.name)
+        else:
+            #if user not logged in ask user to Login
+            self.render('login.html', alert="Please login First.")
+
+    def post(self, post_id):
+        self.write("We received the input")
 
 
 # >>>>>>>>>>>>>>>>      Route definitions     <<<<<<<<<<<<<<<<<<<<<<<<
@@ -313,6 +323,6 @@ app = webapp2.WSGIApplication([
     ('/blog/addblog', AddBlogPage),
     ('/blog/([a-z0-9]+)', SelectedBlogPage),
     ('/blog/[a-z0-9]+/like', Like),
-    ('/blog/[a-z0-9]+/addcomment', AddComment)
+    ('/blog/addcomment/([a-z0-9]+)', AddComment)
     
 ], debug=True)
