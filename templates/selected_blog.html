@@ -9,7 +9,7 @@
                         <div class="col-xs-6"><a href="/blog/{{blog.key().id()}}">{{blog.title}}</a></div>
                         <div class="col-xs-6 text-right">
                             {% if currentUser==blog.username %}
-                                <a href="#" class="btn btn-success btn-xs">Edit</a>
+                                <a href="/blog/editblog/{{blog.key().id()}}" class="btn btn-success btn-xs">Edit</a>
                                 <a href="/blog/deleteblog/{{blog.key().id()}}" class="btn btn-danger btn-xs">Delete</a>
                             {% endif %}
                         </div>
@@ -34,7 +34,7 @@
                     </h4> 
                     <hr>
                     <p class="text-justify">
-                        {{blog.description.replace('\n', '<br>') | safe}}
+                        {{blog.description | safe}}
                     </p>
                 </div>
             </div>

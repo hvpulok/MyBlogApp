@@ -363,6 +363,32 @@ class DeleteBlog(Handler):
         self.redirect('/blog')
         self.redirect('/blog')
 
+class EditBlog(Handler):
+    def get(self, post_id):
+        # code to retrieve selected blog for comment
+        key = db.Key.from_path('Blog', int(post_id))
+        SelectedBlog = db.get(key)
+        self.render('edit_blog.html', blog=SelectedBlog )
+
+    def post(self, post_id):
+        currentUser = self.checkCurrentUser()
+        # code to retrieve selected blog for comment
+        key = db.Key.from_path('Blog', int(post_id))
+        SelectedBlog = db.get(key)
+        author = str(SelectedBlog.username)
+        if author == currentUser.name:
+            newBlogTitle =  self.request.get('title')
+            newBlogDescription =  self.request.get('description')
+            newBlogDescription = newBlogDescription.replace('\n', '<br>')
+
+            SelectedBlog.title = newBlogTitle
+            SelectedBlog.description = newBlogDescription
+            key = SelectedBlog.put()
+            self.redirect("/blog/%s" % key.id())
+
+        else:
+            self.render("alert.html",currentUser=currentUser.name, message = "Warning! You are not authorized to edit this blog. Thanks.")
+
 # >>>>>>>>>>>>>>>>      Route definitions     <<<<<<<<<<<<<<<<<<<<<<<<
 app = webapp2.WSGIApplication([
     ('/', IndexPage),
@@ -374,5 +400,6 @@ app = webapp2.WSGIApplication([
     ('/blog/([a-z0-9]+)', SelectedBlogPage),
     ('/blog/[a-z0-9]+/like', Like),
     ('/blog/addcomment/([a-z0-9]+)', AddComment),
-    ('/blog/deleteblog/([a-z0-9]+)', DeleteBlog)
+    ('/blog/deleteblog/([a-z0-9]+)', DeleteBlog),
+    ('/blog/editblog/([a-z0-9]+)', EditBlog)
 ], debug=True)
