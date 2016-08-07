@@ -1,6 +1,4 @@
-{% extends "base.html" %} 
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
 <div class="jumbotron">
     <div class="container">
@@ -10,31 +8,32 @@
 
 <div class="container">
     {% if alert: %}
-        <div class="alert alert-info alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <strong>Heads up!</strong> {{alert}}
-        </div>
-    {% endif %}
+    <div class="alert alert-info alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Heads up!</strong> {{alert}}
+    </div>
+    {% endif %} 
+    
     {% for blog in blogs %}
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">
                     <div class="row">
                         <div class="col-xs-6"><a href="/blog/{{blog.key().id()}}">{{blog.title}}</a></div>
                         <div class="col-xs-6 text-right"><a href="/blog/{{blog.key().id()}}"><span> Post Date: {{blog.created.strftime("%b %d, %Y")}}</span></a></div>
                     </div>
                 </h3>
-            </div>
-            <div class="panel-body">
-                <!--<pre class="blog-description">
+        </div>
+        <div class="panel-body">
+            <!--<pre class="blog-description">
                     {{blog.description}}
                 </pre>-->
-                <div class="media">
-                    <div class="media-left">
-                        <img class="media-object" src="https://en.opensuse.org/images/0/0b/Icon-user.png" alt="user icon" height="48" width="48">
-                    </div>
-                    <div class="media-body">
-                        <h4 class="media-heading">
+            <div class="media">
+                <div class="media-left">
+                    <img class="media-object" src="https://en.opensuse.org/images/0/0b/Icon-user.png" alt="user icon" height="48" width="48">
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">
                             {% if currentUser: %}
                                 <span>Author: {{currentUser}}</span>
                             {% endif %}
@@ -43,6 +42,7 @@
                 <p>
                     {{blog.description.replace('\n', '<br>') | safe}}
                 </p>
+            </div>
             </div>
             <div class="panel-footer panel-primary">
                 <div class="row">
@@ -61,8 +61,6 @@
             </div>
         </div>
     {% endfor %} 
-</div>
-
-
+  </div>
 
 {% endblock %}

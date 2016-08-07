@@ -286,7 +286,7 @@ class Like(Handler):
 
             # check to avoid duplicacy
             if foundBlog and foundUser:
-                self.render("alert.html", message = "Warning! You already liked this blog. Thanks.")
+                self.render("alert.html",currentUser=currentUser.name, message = "Warning! You already liked this blog. Thanks.")
             else: 
                 #Save like data in db
                 savedLike = LikeDb(blogRef= str(blogKey), userRef= str(userKey))
@@ -346,6 +346,7 @@ class AddComment(Handler):
 
             refblog.commentCount = refblogCommentCount
             key = refblog.put()
+            self.redirect("/blog/%s" % key.id())            
             self.redirect("/blog/%s" % key.id())            
 
         else:
