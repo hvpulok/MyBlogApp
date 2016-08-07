@@ -6,8 +6,11 @@
         <div class="panel-heading">
             <h3 class="panel-title">
                     <div class="row">
-                        <div class="col-xs-6">{{blog.title}}</div>
-                        <div class="col-xs-6 text-right"> Post Date: {{blog.created.strftime("%b %d, %Y")}}</div>
+                        <div class="col-xs-6"><a href="/blog/{{blog.key().id()}}">{{blog.title}}</a></div>
+                        <div class="col-xs-6 text-right">
+                            <a href="#" class="btn btn-success btn-xs">Edit</a>
+                            <a href="/blog/deleteblog/{{blog.key().id()}}" class="btn btn-danger btn-xs">Delete</a>
+                        </div>
                     </div>
                 </h3>
         </div>

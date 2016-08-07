@@ -49,6 +49,7 @@ class Blog(db.Model):
     lastModified = db.DateTimeProperty(auto_now = True)
     likeCount = db.IntegerProperty()
     commentCount = db.IntegerProperty()
+    username = db.StringProperty()
 
 # ========== Like DB model ============
 class LikeDb(db.Model):
@@ -353,6 +354,15 @@ class AddComment(Handler):
             #if user not logged in ask user to Login
             self.render('login.html', alert="Please login First.")
 
+
+class DeleteBlog(Handler):
+    def get(self, post_id):
+        # code to retrieve selected blog for comment
+        key = db.Key.from_path('Blog', int(post_id))
+        db.delete(key)
+        self.redirect('/blog')
+        self.redirect('/blog')
+
 # >>>>>>>>>>>>>>>>      Route definitions     <<<<<<<<<<<<<<<<<<<<<<<<
 app = webapp2.WSGIApplication([
     ('/', IndexPage),
@@ -363,6 +373,6 @@ app = webapp2.WSGIApplication([
     ('/blog/addblog', AddBlogPage),
     ('/blog/([a-z0-9]+)', SelectedBlogPage),
     ('/blog/[a-z0-9]+/like', Like),
-    ('/blog/addcomment/([a-z0-9]+)', AddComment)
-    
+    ('/blog/addcomment/([a-z0-9]+)', AddComment),
+    ('/blog/deleteblog/([a-z0-9]+)', DeleteBlog)
 ], debug=True)
