@@ -186,7 +186,7 @@ class SelectedBlogPage(Handler):
         SelectedBlog = db.get(key)
 
         # code to retrieve all related comments data
-        foundComments = db.GqlQuery(("SELECT * FROM CommentDB WHERE blogkey= '%s'  ORDER BY commentDate DESC") % str(key))
+        foundComments = db.GqlQuery(("SELECT * FROM CommentDB WHERE blogkey= '%s'  ORDER BY commentDate ASC") % str(key))
         currentUser = self.checkCurrentUser()
         if currentUser:
             if foundComments:

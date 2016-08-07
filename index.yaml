@@ -26,6 +26,11 @@ indexes:
   properties:
   - name: blogkey
   - name: commentDate
+
+- kind: CommentDB
+  properties:
+  - name: blogkey
+  - name: commentDate
     direction: desc
 
 - kind: CommentDB
