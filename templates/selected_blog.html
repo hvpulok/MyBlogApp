@@ -37,9 +37,11 @@
                             <input type="text" name="likedBlog" value="{{blog.key()}}" hidden>
                         </div>
                     </form>
-                        <div class="col-xs-6 text-right">
-                            <a href="#"><i class="fa fa-comments" aria-hidden="true"></i> Comment</a>
-                        </div>
+                    <form id="formCommentBlog" action="/blog/{{blog.key().id()}}/addcomment" method="POST">
+                    <div class="col-xs-6 text-right">
+                        <a href="/blog/{{blog.key().id()}}/addcomment"><i class="fa fa-comments" aria-hidden="true"></i> Comment</a>
+                    </div>
+                    </form>
                 </div>
             </div>
         </div>

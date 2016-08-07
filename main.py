@@ -297,7 +297,9 @@ class Like(Handler):
             #if user not logged in ask user to Login
             self.render('login.html', alert="Please login First.")
             
-
+class AddComment(Handler):
+    def get(self):
+        self.write("This is comment page")
 
 
 
@@ -311,6 +313,6 @@ app = webapp2.WSGIApplication([
     ('/blog/addblog', AddBlogPage),
     ('/blog/([a-z0-9]+)', SelectedBlogPage),
     ('/blog/[a-z0-9]+/like', Like),
-    # ('/blog/[a-z0-9]+/addcomment', AddComment)
+    ('/blog/[a-z0-9]+/addcomment', AddComment)
     
 ], debug=True)
