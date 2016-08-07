@@ -168,9 +168,9 @@ class AddBlogPage(Handler):
             newBlogTitle =  self.request.get('title')
             newBlogDescription =  self.request.get('description')
             newBlogDescription = newBlogDescription.replace('\n', '<br>')
-
+            username = currentUser.name
             if newBlogTitle and newBlogDescription:
-                post = Blog(title= newBlogTitle, description=newBlogDescription)
+                post = Blog(title= newBlogTitle, description=newBlogDescription, username=username)
                 key = post.put()
                 self.redirect("/blog/%s" % key.id())
             else:

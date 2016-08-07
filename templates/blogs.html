@@ -2,7 +2,7 @@
 
 <div class="jumbotron">
     <div class="container">
-        <h1><span class="glyphicon glyphicon-leaf" aria-hidden="true"></span> All the blogs </h1>
+        <h1><span class="glyphicon glyphicon-leaf" aria-hidden="true"></span> Read All the Blogs Here. </h1>
     </div>
 </div>
 
@@ -40,16 +40,14 @@
                     <h4 class="media-heading">
                         <div class="row">
                             <div class="col-xs-6">
-                                {% if currentUser: %}
-                                    <span>Author: {{currentUser}}</span>
-                                {% endif %}
+                                Author: {{blog.username}}
                             </div>
                             <div class="col-xs-6 text-right">
                                 <span> Post Date: {{blog.created.strftime("%b %d, %Y")}}</span>
                             </div>
                         </div>
-
-                    </div>
+                    </h4> 
+                </div>
                 <hr>
                 <p>
                     {{blog.description.replace('\n', '<br>') | safe}}

@@ -21,11 +21,17 @@
                 </div>
                 <div class="media-body">
                     <h4 class="media-heading">
-                            {% if currentUser: %}
-                                <span>Author: {{currentUser}}</span>
-                                <hr>
-                            {% endif %}
-                        </h4> {{blog.description.replace('\n', '<br>') | safe}}
+                        <div class="row">
+                            <div class="col-xs-6">
+                                Author: {{blog.username}}
+                            </div>
+                            <div class="col-xs-6 text-right">
+                                <span> Post Date: {{blog.created.strftime("%b %d, %Y")}}</span>
+                            </div>
+                        </div>
+                    </h4> 
+                    <hr>
+                    {{blog.description.replace('\n', '<br>') | safe}}
                 </div>
             </div>
         </div>
