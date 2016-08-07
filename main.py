@@ -48,6 +48,7 @@ class Blog(db.Model):
     created = db.DateTimeProperty(auto_now_add = True)
     lastModified = db.DateTimeProperty(auto_now = True)
     likeCount = db.IntegerProperty()
+    commentCount = db.IntegerProperty()
 
 # ========== Like DB model ============
 class LikeDb(db.Model):
@@ -56,7 +57,7 @@ class LikeDb(db.Model):
     likeDate = db.DateTimeProperty(auto_now_add = True)
 
 # ========== Comment DB model ============
-class Comment(db.Model):
+class CommentDB(db.Model):
     comment = db.StringProperty()
     blogkey = db.StringProperty()
     userkey = db.StringProperty()
@@ -299,6 +300,7 @@ class Like(Handler):
             
 class AddComment(Handler):
     def get(self, post_id):
+        # code to retrieve selected blog for comment
         key = db.Key.from_path('Blog', int(post_id))
         SelectedBlog = db.get(key)
 
@@ -310,8 +312,36 @@ class AddComment(Handler):
             self.render('login.html', alert="Please login First.")
 
     def post(self, post_id):
-        self.write("We received the input")
+        # code to retrieve selected blog for comment
+        blogKey = db.Key.from_path('Blog', int(post_id))
+        SelectedBlog = db.get(blogKey)
+        # get Userid
+        currentUser = self.checkCurrentUser()
+        if currentUser:
+            # get username and user key
+            userKey = currentUser.key()
+            username = currentUser.name
+            # code to retrieve user input comment
+            userComment = self.request.get('user_comment')
+            #Save userComment data in db
+            savedComment = CommentDB(comment = str(userComment) , blogkey= str(blogKey), userkey= str(userKey))
+            commentKey = savedComment.put()
 
+            # search commented blog based on blog Key in Blog dB
+            refblog = db.get(blogKey)
+            refblogCommentCount = refblog.commentCount
+            if refblogCommentCount:
+                refblogCommentCount= int(refblogCommentCount) + 1
+            else:
+                refblogCommentCount= 1
+
+            refblog.commentCount = refblogCommentCount
+            key = refblog.put()
+            self.redirect("/blog/%s" % key.id())            
+
+        else:
+            #if user not logged in ask user to Login
+            self.render('login.html', alert="Please login First.")
 
 # >>>>>>>>>>>>>>>>      Route definitions     <<<<<<<<<<<<<<<<<<<<<<<<
 app = webapp2.WSGIApplication([
