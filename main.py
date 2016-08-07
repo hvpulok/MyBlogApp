@@ -61,6 +61,7 @@ class CommentDB(db.Model):
     comment = db.StringProperty()
     blogkey = db.StringProperty()
     userkey = db.StringProperty()
+    username = db.StringProperty()
     commentDate = db.DateTimeProperty(auto_now_add = True)
 
 # >>>>>>>>>>>>>      Password Protection definitions     <<<<<<<<<<<<<<<<
@@ -183,11 +184,19 @@ class SelectedBlogPage(Handler):
         key = db.Key.from_path('Blog', int(post_id))
         SelectedBlog = db.get(key)
 
+        # code to retrieve all related comments data
+        foundComments = db.GqlQuery(("SELECT * FROM CommentDB WHERE blogkey= '%s'  ORDER BY commentDate DESC") % str(key))
         currentUser = self.checkCurrentUser()
         if currentUser:
-            self.render("selected_blog.html", blog = SelectedBlog, currentUser=currentUser.name)
+            if foundComments:
+                self.render("selected_blog.html", blog = SelectedBlog, currentUser=currentUser.name, comments=foundComments)
+            else:
+                self.render("selected_blog.html", blog = SelectedBlog, currentUser=currentUser.name, comments="")
         else:
-            self.render("selected_blog.html", blog = SelectedBlog, currentUser="")
+            if foundComments:
+                self.render("selected_blog.html", blog = SelectedBlog, currentUser="", comments=foundComments)
+            else:
+                self.render("selected_blog.html", blog = SelectedBlog, currentUser="", comments="")
 
 # ===== User handler definitions =====
 # ===== username duplicacy check =====
@@ -324,7 +333,7 @@ class AddComment(Handler):
             # code to retrieve user input comment
             userComment = self.request.get('user_comment')
             #Save userComment data in db
-            savedComment = CommentDB(comment = str(userComment) , blogkey= str(blogKey), userkey= str(userKey))
+            savedComment = CommentDB(comment = str(userComment) , blogkey= str(blogKey), userkey= str(userKey), username = str(username))
             commentKey = savedComment.put()
 
             # search commented blog based on blog Key in Blog dB
