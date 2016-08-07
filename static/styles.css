@@ -39,4 +39,6 @@ a:visited {
     border-radius: 5px;
 }
 
-
+#formLikedBlog{
+    display: inline;
+}
