@@ -269,16 +269,14 @@ class Like(Handler):
 
             # get selected Blog
             blogKey = self.request.get('likedBlog')
-            userKey = str(userKey)
-            blogKey = str(blogKey)
 
             #check duplicacy
-            foundUser = LikeDb.all().filter('userRef =', userKey).get()
-            foundBlog = LikeDb.all().filter('blogRef =', blogKey).get()
+            foundUser = LikeDb.all().filter('userRef =', str(userKey)).get()
+            foundBlog = LikeDb.all().filter('blogRef =', str(blogKey)).get()
 
             # check to avoid duplicacy
             if foundBlog and foundUser:
-                self.redirect("/blog")
+                self.render("alert.html", message = "Warning! You already liked this blog. Thanks.")
             else: 
                 #Save like data in db
                 savedLike = LikeDb(blogRef= str(blogKey), userRef= str(userKey))
