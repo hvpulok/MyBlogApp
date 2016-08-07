@@ -29,10 +29,16 @@
                 <!--<pre class="blog-description">
                     {{blog.description}}
                 </pre>-->
-                {% if currentUser: %}
-                    <span>Author: {{currentUser}}</span>
-                {% endif %}
-                
+                <div class="media">
+                    <div class="media-left">
+                        <img class="media-object" src="https://en.opensuse.org/images/0/0b/Icon-user.png" alt="user icon" height="48" width="48">
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">
+                            {% if currentUser: %}
+                                <span>Author: {{currentUser}}</span>
+                            {% endif %}
+                    </div>
                 <hr>
                 <p>
                     {{blog.description.replace('\n', '<br>') | safe}}

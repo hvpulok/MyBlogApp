@@ -1,51 +1,72 @@
 {% extends "base.html" %} 
-
 {% block content %}
 
 <div class="container">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">
                     <div class="row">
                         <div class="col-xs-6">{{blog.title}}</div>
                         <div class="col-xs-6 text-right"> Post Date: {{blog.created.strftime("%b %d, %Y")}}</div>
                     </div>
                 </h3>
-            </div>
-            <div class="panel-body">
-                <div class="media">
-                    <div class="media-left">
-                        <img class="media-object" src="http://www.elektroserve.com.my/wp-content/uploads/2015/03/icon1.png" alt="user icon" height="120" width="120">
-                    </div>
-                    <div class="media-body">
-                        <h4 class="media-heading">
+        </div>
+        <div class="panel-body">
+            <div class="media">
+                <div class="media-left">
+                    <img class="media-object" src="https://en.opensuse.org/images/0/0b/Icon-user.png" alt="user icon" height="120" width="120">
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">
                             {% if currentUser: %}
                                 <span>Author: {{currentUser}}</span>
                                 <hr>
                             {% endif %}
-                        </h4>
-                        {{blog.description.replace('\n', '<br>') | safe}}
-                    </div>
+                        </h4> {{blog.description.replace('\n', '<br>') | safe}}
                 </div>
             </div>
-            <div class="panel-footer panel-primary">
-                <div class="row">
-                    <form id="formLikedBlog" action="/blog/{{blog.key().id()}}/like" method="POST">
-                        <div class="col-xs-6">
-                            <a id="linkLikedBlog"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Like</a>
-                            <a id="linkLikedBlog"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> {{blog.likeCount}}</a>
-                            <input type="text" name="likedBlog" value="{{blog.key()}}" hidden>
-                        </div>
-                    </form>
-                    <form id="formCommentBlog" action="/blog/{{blog.key().id()}}/addcomment" method="POST">
+        </div>
+        <div class="panel-footer panel-primary">
+            <div class="row">
+                <form id="formLikedBlog" action="/blog/{{blog.key().id()}}/like" method="POST">
+                    <div class="col-xs-6">
+                        <a id="linkLikedBlog"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Like</a>
+                        <a id="linkLikedBlog"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> {{blog.likeCount}}</a>
+                        <input type="text" name="likedBlog" value="{{blog.key()}}" hidden>
+                    </div>
+                </form>
+                <form id="formCommentBlog" action="/blog/{{blog.key().id()}}/addcomment" method="POST">
                     <div class="col-xs-6 text-right">
                         <a href="/blog/addcomment/{{blog.key().id()}}"><i class="fa fa-comments" aria-hidden="true"></i> Comment</a>
                         <a><i class="fa fa-comments" aria-hidden="true"></i> Comments: {{blog.commentCount}}</a>
                     </div>
-                    </form>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                    <div class="row">
+                        <div class="col-xs-6">User Comments</div>
+                        <div class="col-xs-6 text-right"> Total Comments: {{blog.commentCount}}</div>
+                    </div>
+                </h3>
+        </div>
+        <div class="panel-body">
+            <div class="media">
+                <div class="media-left">
+                    <img class="media-object" src="https://en.opensuse.org/images/0/0b/Icon-user.png" alt="user icon" height="64" width="64">
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">
+                            {% if currentUser: %}
+                                <span>Author: {{currentUser}}</span>
+                            {% endif %}
+                        </h4> Look, I'm in a well!
                 </div>
             </div>
         </div>
-</div>
+    </div>
 
-{% endblock %}
+    {% endblock %}

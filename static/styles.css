@@ -32,4 +32,11 @@ a:visited {
     text-decoration: none;
 }
 
+.media-object{
+    padding: 5px;
+    border: 1px solid lightgray;
+    background-color: #ecf0f1;
+    border-radius: 5px;
+}
+
 
