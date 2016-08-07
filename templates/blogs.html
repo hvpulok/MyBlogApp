@@ -21,17 +21,16 @@
                     <div class="row">
                         <div class="col-xs-6"><a href="/blog/{{blog.key().id()}}">{{blog.title}}</a></div>
                         <div class="col-xs-6 text-right">
-                            <a href="#" class="btn btn-success btn-xs">Edit</a>
-                            <a href="/blog/deleteblog/{{blog.key().id()}}" class="btn btn-danger btn-xs">Delete</a>
+                            {% if currentUser==blog.username %}
+                                <a href="#" class="btn btn-success btn-xs">Edit</a>
+                                <a href="/blog/deleteblog/{{blog.key().id()}}" class="btn btn-danger btn-xs">Delete</a>
+                            {% endif %}
                             <a href="/blog/{{blog.key().id()}}"><span title="Read More"> <i class="fa fa-expand" aria-hidden="true"></i></span></a>
                         </div>
                     </div>
                 </h3>
         </div>
         <div class="panel-body">
-            <!--<pre class="blog-description">
-                    {{blog.description}}
-                </pre>-->
             <div class="media">
                 <div class="media-left">
                     <img class="media-object" src="https://en.opensuse.org/images/0/0b/Icon-user.png" alt="user icon" height="48" width="48">
@@ -49,7 +48,7 @@
                     </h4> 
                 </div>
                 <hr>
-                <p>
+                <p class="text-justify">
                     {{blog.description.replace('\n', '<br>') | safe}}
                 </p>
             </div>
