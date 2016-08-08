@@ -89,7 +89,9 @@
         <div class="panel-heading">
             <h3 class="panel-title">
                     <div class="row">
-                        <div class="col-xs-6">User Comments</div>
+                        <div class="col-xs-6">
+                            User Comments
+                        </div>
                         <div class="col-xs-6 text-right"> Total Comments: {{blog.commentCount}}</div>
                     </div>
                 </h3>
@@ -108,6 +110,10 @@
                                 </div>
                                 <div class="col-xs-6 text-right">
                                     <span> Comment Date: {{comment.commentDate.strftime("%b %d, %Y")}}</span>
+                                    {% if currentUser==comment.username %}
+                                        <a href="/blog/editcomment/{{comment.key().id()}}" class="btn btn-success btn-xs">Edit</a>
+                                        <a href="/blog/deleteblog/{{comment.key().id()}}" class="btn btn-danger btn-xs">Delete</a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </h4>

@@ -413,6 +413,12 @@ class LikeBlog(Handler):
             #if user not logged in ask user to Login
             self.render('login.html', alert="Please login First.")
 
+
+class EditComment(Handler):
+    def get(self, post_id):
+        self.write("This is edit comment page")
+
+
 # >>>>>>>>>>>>>>>>      Route definitions     <<<<<<<<<<<<<<<<<<<<<<<<
 app = webapp2.WSGIApplication([
     ('/', IndexPage),
@@ -423,6 +429,7 @@ app = webapp2.WSGIApplication([
     ('/blog/addblog', AddBlogPage),
     ('/blog/([a-z0-9]+)', SelectedBlogPage),
     ('/blog/addcomment/([a-z0-9]+)', AddComment),
+    ('/blog/editcomment/([a-z0-9]+)', EditComment),
     ('/blog/deleteblog/([a-z0-9]+)', DeleteBlog),
     ('/blog/editblog/([a-z0-9]+)', EditBlog),
     ('/blog/like/([a-z0-9]+)', LikeBlog)
