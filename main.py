@@ -56,6 +56,7 @@ class LikeDb(db.Model):
     blogRef = db.StringProperty(required= True)
     userRef = db.StringProperty(required= True)
     likeDate = db.DateTimeProperty(auto_now_add = True)
+    username = db.StringProperty()
 
 # ========== Comment DB model ============
 class CommentDB(db.Model):
@@ -184,20 +185,28 @@ class SelectedBlogPage(Handler):
     def get(self, post_id):
         key = db.Key.from_path('Blog', int(post_id))
         SelectedBlog = db.get(key)
+        
+        # code to retrieve all related likes data
+        foundLikes = db.GqlQuery(("SELECT * FROM LikeDb WHERE blogRef= '%s' ORDER BY likeDate DESC") % str(key))
 
+        # foundblogs = db.GqlQuery(("SELECT * FROM Blog"))
+        # for blogsss in foundblogs:
+        #     blogsss.likeCount = 0
+        #     blogsss.put()
+            
         # code to retrieve all related comments data
         foundComments = db.GqlQuery(("SELECT * FROM CommentDB WHERE blogkey= '%s'  ORDER BY commentDate ASC") % str(key))
         currentUser = self.checkCurrentUser()
         if currentUser:
             if foundComments:
-                self.render("selected_blog.html", blog = SelectedBlog, currentUser=currentUser.name, comments=foundComments)
+                self.render("selected_blog.html", blog = SelectedBlog, currentUser=currentUser.name, comments=foundComments, likes= foundLikes)
             else:
-                self.render("selected_blog.html", blog = SelectedBlog, currentUser=currentUser.name, comments="")
+                self.render("selected_blog.html", blog = SelectedBlog, currentUser=currentUser.name, comments="", likes= foundLikes)
         else:
             if foundComments:
-                self.render("selected_blog.html", blog = SelectedBlog, currentUser="", comments=foundComments)
+                self.render("selected_blog.html", blog = SelectedBlog, currentUser="", comments=foundComments, likes= foundLikes)
             else:
-                self.render("selected_blog.html", blog = SelectedBlog, currentUser="", comments="")
+                self.render("selected_blog.html", blog = SelectedBlog, currentUser="", comments="", likes= foundLikes)
 
 # ===== User handler definitions =====
 # ===== username duplicacy check =====
@@ -268,45 +277,6 @@ class Logout(Handler):
         self.response.headers.add_header('Set-Cookie', 'user_id=; Path=/')
         # redirect to blog page
         self.redirect('/blog')
-
-class Like(Handler):
-    def post(self):
-        # get Userid
-        currentUser = self.checkCurrentUser()
-        if currentUser:
-            # get username and user key
-            userKey = currentUser.key()
-            username = currentUser.name
-
-            # get selected Blog
-            blogKey = self.request.get('likedBlog')
-
-            #check duplicacy
-            foundUser = LikeDb.all().filter('userRef =', str(userKey)).get()
-            foundBlog = LikeDb.all().filter('blogRef =', str(blogKey)).get()
-
-            # check to avoid duplicacy
-            if foundBlog and foundUser:
-                self.render("alert.html",currentUser=currentUser.name, message = "Warning! You already liked this blog. Thanks.")
-            else: 
-                #Save like data in db
-                savedLike = LikeDb(blogRef= str(blogKey), userRef= str(userKey))
-                likeKey = savedLike.put()
-
-                # search liked blog based on blog Key in Blog dB
-                refblog = db.get(blogKey)
-                refblogLikeCount = refblog.likeCount
-                if refblogLikeCount:
-                    refblogLikeCount= int(refblogLikeCount) + 1
-                else:
-                    refblogLikeCount= 1
-
-                refblog.likeCount = refblogLikeCount
-                key = refblog.put()
-                self.redirect("/blog/%s" % key.id())
-        else:
-            #if user not logged in ask user to Login
-            self.render('login.html', alert="Please login First.")
             
 class AddComment(Handler):
     def get(self, post_id):
@@ -389,6 +359,49 @@ class EditBlog(Handler):
         else:
             self.render("alert.html",currentUser=currentUser.name, message = "Warning! You are not authorized to edit this blog. Thanks.")
 
+
+class LikeBlog(Handler):
+    def get(self, post_id):
+        # code to retrieve selected blog for comment
+        blogKey = db.Key.from_path('Blog', int(post_id))
+        SelectedBlog = db.get(blogKey)
+        # get blog author
+        author = str(SelectedBlog.username)
+
+        # get username and user key
+        currentUser = self.checkCurrentUser()
+        if currentUser:
+            username = currentUser.name
+            userKey = currentUser.key()
+            if author != username:
+                #check duplicacy
+                foundUser = LikeDb.all().filter('userRef =', str(userKey)).get()
+                foundBlog = LikeDb.all().filter('blogRef =', str(blogKey)).get()                
+                # check to avoid duplicacy
+                if foundBlog and foundUser:
+                    self.render("alert.html",currentUser=currentUser.name, message = "Warning! You already liked this blog. Thanks.")
+                else: 
+                    #Save like data in db
+                    savedLike = LikeDb(blogRef= str(blogKey), userRef= str(userKey), username= username)
+                    likeKey = savedLike.put()
+
+                    # search liked blog based on blog Key in Blog dB
+                    refblog = db.get(blogKey)
+                    refblogLikeCount = refblog.likeCount
+                    if refblogLikeCount:
+                        refblogLikeCount= int(refblogLikeCount) + 1
+                    else:
+                        refblogLikeCount= 1
+
+                    refblog.likeCount = refblogLikeCount
+                    key = refblog.put()
+                    self.redirect("/blog/%s" % key.id())
+            else:
+                self.render("alert.html",currentUser=currentUser.name, message = "Warning! You are not authorized to Like your own blog. Thanks.")
+        else:
+            #if user not logged in ask user to Login
+            self.render('login.html', alert="Please login First.")
+
 # >>>>>>>>>>>>>>>>      Route definitions     <<<<<<<<<<<<<<<<<<<<<<<<
 app = webapp2.WSGIApplication([
     ('/', IndexPage),
@@ -398,8 +411,8 @@ app = webapp2.WSGIApplication([
     ('/blog', BlogPage),
     ('/blog/addblog', AddBlogPage),
     ('/blog/([a-z0-9]+)', SelectedBlogPage),
-    ('/blog/[a-z0-9]+/like', Like),
     ('/blog/addcomment/([a-z0-9]+)', AddComment),
     ('/blog/deleteblog/([a-z0-9]+)', DeleteBlog),
-    ('/blog/editblog/([a-z0-9]+)', EditBlog)
+    ('/blog/editblog/([a-z0-9]+)', EditBlog),
+    ('/blog/like/([a-z0-9]+)', LikeBlog)
 ], debug=True)

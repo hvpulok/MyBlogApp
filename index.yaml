@@ -38,3 +38,15 @@ indexes:
   - name: blogkey
   - name: created
     direction: desc
+
+- kind: LikeDb
+  properties:
+  - name: blogRef
+  - name: likeDate
+    direction: desc
+
+- kind: LikeDb
+  properties:
+  - name: blogkey
+  - name: likeDate
+    direction: desc

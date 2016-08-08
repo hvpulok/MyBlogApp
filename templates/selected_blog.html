@@ -43,10 +43,7 @@
             <div class="row">
                 <div class="col-xs-6">
                     {% if currentUser!=blog.username %}
-                        <form  id="formLikedBlog" action="/blog/{{blog.key().id()}}/like" method="POST">
-                            <a id="linkLikedBlog"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Like</a>
-                            <input type="text" name="likedBlog" value="{{blog.key()}}" hidden>
-                        </form>
+                        <a href="/blog/like/{{blog.key().id()}}" id="linkLikedBlog"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Like</a>
                     {% endif %}
                     <span><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> {{blog.likeCount}}</span>
                 </div>
@@ -57,6 +54,22 @@
             </div>
         </div>
     </div>
+
+    <!--panel for likes-->
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">User Likes</h3>
+        </div>
+        <div class="panel-body">
+            {% for like in likes %}
+                <ol>
+                    <li>{{like.username}}</li>
+                </ol>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!--panel for comments-->
     <div class="panel panel-success">
         <div class="panel-heading">
             <h3 class="panel-title">
@@ -67,10 +80,6 @@
                 </h3>
         </div>
         <div class="panel-body">
-            <!--{% for eachComment in comments %}
-                {{eachComment.comment}}
-            {% endfor %} -->
-
             {% for comment in comments %}
                 <div class="media">
                     <div class="media-left">
