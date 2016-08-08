@@ -65,5 +65,11 @@ a:visited {
 
 .gap{
     /*background-color: lightblue;*/
-    height: 15vh;
+    height: 5vh;
+}
+
+.leaf{
+    font-size: 20em;
+    text-align: center;
+    text-shadow: 3px 8px 30px rgba(0, 0, 0, 0.2);
 }
