@@ -62,9 +62,24 @@
         </div>
         <div class="panel-body">
             {% for like in likes %}
-                <ol>
-                    <li>{{like.username}}</li>
-                </ol>
+                <div class="media">
+                    <div class="media-left">
+                        <img class="media-object" src="https://en.opensuse.org/images/0/0b/Icon-user.png" alt="user icon" height="64" width="64">
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    {{like.username}}
+                                </div>
+                            </div>
+                        </h4>
+                        <p class="text-justify">
+                            Like Date: {{like.likeDate.strftime("%b %d, %Y")}}
+                        </p>
+                    </div>
+                    <hr>
+                </div>
             {% endfor %}
         </div>
     </div>
