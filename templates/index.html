@@ -1,18 +1,14 @@
-{% extends "base.html" %}
-
-{% block content %}
-
-<div class="jumbotron">
-    <div class="container">
+{% extends "base.html" %} {% block content %}
+<div class="container">
+    <div class="jumbotron">
         <h1><span class="glyphicon glyphicon-leaf" aria-hidden="true"></span> My Blog App!</h1>
         <p>Express yourself here...</p>
         <p>
-            <a href="/blog/addblog" class="btn btn-primary btn-lg">Add New Blog</a>
+            <a href="/blog" class="btn btn-lg btn-success" >Read</a>
+            <a href="/login" class="btn btn-lg btn-success" >Login</a>
+            <a href="/signup" class="btn btn-lg btn-success" >Signup</a>
         </p>
     </div>
 </div>
-
-
-
 
 {% endblock %}
