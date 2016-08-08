@@ -197,16 +197,23 @@ class SelectedBlogPage(Handler):
         # code to retrieve all related comments data
         foundComments = db.GqlQuery(("SELECT * FROM CommentDB WHERE blogkey= '%s'  ORDER BY commentDate ASC") % str(key))
         currentUser = self.checkCurrentUser()
+
         if currentUser:
-            if foundComments:
-                self.render("selected_blog.html", blog = SelectedBlog, currentUser=currentUser.name, comments=foundComments, likes= foundLikes)
-            else:
-                self.render("selected_blog.html", blog = SelectedBlog, currentUser=currentUser.name, comments="", likes= foundLikes)
+            currentUserName = currentUser.name
         else:
-            if foundComments:
-                self.render("selected_blog.html", blog = SelectedBlog, currentUser="", comments=foundComments, likes= foundLikes)
-            else:
-                self.render("selected_blog.html", blog = SelectedBlog, currentUser="", comments="", likes= foundLikes)
+             currentUserName = ""
+
+        if foundComments:
+            comments = foundComments
+        else:
+            comments = ""
+        
+        if foundLikes:
+            likes = foundLikes
+        else:
+            likes = ""
+
+        self.render("selected_blog.html", blog = SelectedBlog, currentUser=currentUserName, comments=comments, likes= likes)
 
 # ===== User handler definitions =====
 # ===== username duplicacy check =====
