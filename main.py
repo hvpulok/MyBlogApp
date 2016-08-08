@@ -342,30 +342,43 @@ class DeleteBlog(Handler):
 
 class EditBlog(Handler):
     def get(self, post_id):
-        # code to retrieve selected blog for comment
-        key = db.Key.from_path('Blog', int(post_id))
-        SelectedBlog = db.get(key)
-        self.render('edit_blog.html', blog=SelectedBlog )
+        currentUser = self.checkCurrentUser()
+        if currentUser:
+            username = currentUser.name
+            # code to retrieve selected blog for comment
+            key = db.Key.from_path('Blog', int(post_id))
+            SelectedBlog = db.get(key)
+            author = SelectedBlog.username
+            if username == author :
+                self.render('edit_blog.html', currentUser=username, blog=SelectedBlog )
+            else:
+                self.render("alert.html",currentUser=currentUser.name, message = "Warning! You are not authorized to Edit this blog. Thanks.")
+        else:
+            #if user not logged in ask user to Login
+            self.render('login.html', alert="Please login First.")                 
 
     def post(self, post_id):
         currentUser = self.checkCurrentUser()
-        # code to retrieve selected blog for comment
-        key = db.Key.from_path('Blog', int(post_id))
-        SelectedBlog = db.get(key)
-        author = str(SelectedBlog.username)
-        if author == currentUser.name:
-            newBlogTitle =  self.request.get('title')
-            newBlogDescription =  self.request.get('description')
-            newBlogDescription = newBlogDescription.replace('\n', '<br>')
+        if currentUser:
+            # code to retrieve selected blog for comment
+            key = db.Key.from_path('Blog', int(post_id))
+            SelectedBlog = db.get(key)
+            author = str(SelectedBlog.username)
+            if author == currentUser.name:
+                newBlogTitle =  self.request.get('title')
+                newBlogDescription =  self.request.get('description')
+                newBlogDescription = newBlogDescription.replace('\n', '<br>')
 
-            SelectedBlog.title = newBlogTitle
-            SelectedBlog.description = newBlogDescription
-            key = SelectedBlog.put()
-            self.redirect("/blog/%s" % key.id())
+                SelectedBlog.title = newBlogTitle
+                SelectedBlog.description = newBlogDescription
+                key = SelectedBlog.put()
+                self.redirect("/blog/%s" % key.id())
 
+            else:
+                self.render("alert.html",currentUser=currentUser.name, message = "Warning! You are not authorized to edit this blog. Thanks.")
         else:
-            self.render("alert.html",currentUser=currentUser.name, message = "Warning! You are not authorized to edit this blog. Thanks.")
-
+            #if user not logged in ask user to Login
+            self.render('login.html', alert="Please login First.") 
 
 class LikeBlog(Handler):
     def get(self, post_id):
@@ -416,8 +429,44 @@ class LikeBlog(Handler):
 
 class EditComment(Handler):
     def get(self, post_id):
-        self.write("This is edit comment page")
+        currentUser = self.checkCurrentUser()
+        if currentUser:
+            username = currentUser.name
+            # code to retrieve selected comment for edit
+            key = db.Key.from_path('CommentDB', int(post_id))
+            SelectedComment = db.get(key)
+            commentor = SelectedComment.username
+            if username == commentor :
+                self.render('edit_comment.html', currentUser=username, comment=SelectedComment)
+            else:
+                self.render("alert.html",currentUser=currentUser.name, message = "Warning! You are not authorized to Edit this comment. Thanks.")
+        else:
+            #if user not logged in ask user to Login
+            self.render('login.html', alert="Please login First.")                               
 
+
+    def post(self, post_id):
+            currentUser = self.checkCurrentUser()
+            if currentUser:
+                username = currentUser.name
+                # code to retrieve selected comment for edit
+                key = db.Key.from_path('CommentDB', int(post_id))
+                SelectedComment = db.get(key)
+                commentor = SelectedComment.username
+                if username == commentor :
+                    # code to retrieve user input comment
+                    newComment = self.request.get('user_comment')
+                    SelectedComment.comment = newComment
+                    key = SelectedComment.put()
+                    blogKey = SelectedComment.blogkey
+                    selectedBlog = db.get(blogKey)
+                    self.redirect("/blog/%s" % selectedBlog.key().id())
+                    self.redirect("/blog/%s" % selectedBlog.key().id())
+                else:
+                    self.render("alert.html",currentUser=currentUser.name, message = "Warning! You are not authorized to Edit this comment. Thanks.")
+            else:
+                #if user not logged in ask user to Login
+                self.render('login.html', alert="Please login First.")      
 
 # >>>>>>>>>>>>>>>>      Route definitions     <<<<<<<<<<<<<<<<<<<<<<<<
 app = webapp2.WSGIApplication([

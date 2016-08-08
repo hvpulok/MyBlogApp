@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">Edit {{comment.username}}'s Comment</h3>
+    </div>
+    <div class="panel-body">
+        <form action="/blog/editcomment/{{comment.key().id()}}" method="POST" class="form-horizontal">
+            <div class="form-group ">
+                <label class="col-sm-2 control-label" for="formGroupInputLarge">Comment</label>
+                <div class="col-sm-10">
+                    <textarea name="user_comment" class="form-control" rows="3">{{comment.comment}}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10 error">
+                    {{error}}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-success">Update</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    </div>
+</div>
+
+{% endblock %}
