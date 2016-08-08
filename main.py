@@ -375,11 +375,15 @@ class LikeBlog(Handler):
             userKey = currentUser.key()
             if author != username:
                 #check duplicacy
-                foundUser = LikeDb.all().filter('userRef =', str(userKey)).get()
-                foundBlog = LikeDb.all().filter('blogRef =', str(blogKey)).get()                
-                # check to avoid duplicacy
-                if foundBlog and foundUser:
+                foundLikes = db.GqlQuery(("SELECT * FROM LikeDb WHERE blogRef= '%s' AND userRef= '%s' ") % (str(blogKey), str(userKey)))                
+                    
+                likedUsers = []
+                for like in foundLikes:
+                    EachUsername = like.username
+                    likedUsers.append(EachUsername)
+                if len(likedUsers)>0:
                     self.render("alert.html",currentUser=currentUser.name, message = "Warning! You already liked this blog. Thanks.")
+
                 else: 
                     #Save like data in db
                     savedLike = LikeDb(blogRef= str(blogKey), userRef= str(userKey), username= username)
