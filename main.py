@@ -483,9 +483,16 @@ class DeleteComment(Handler):
                 # code to delete comment
                 db.delete(key)
                 #Code to update comment count
+                refblogCommentCount = selectedBlog.commentCount
+                if refblogCommentCount > 0:
+                    refblogCommentCount= int(refblogCommentCount) - 1
+                else:
+                    refblogCommentCount= 0
+                selectedBlog.commentCount = refblogCommentCount
+                blogKey = selectedBlog.put()
                 # code to redirect to selected blog
-                self.redirect("/blog/%s" % selectedBlog.key().id())
-                self.redirect("/blog/%s" % selectedBlog.key().id())
+                self.redirect("/blog/%s" % blogKey.id())
+                self.redirect("/blog/%s" % blogKey.id())
             else:
                 self.render("alert.html",currentUser=currentUser.name, message = "Warning! You are not authorized to Delete this comment. Thanks.")
         else:
