@@ -6,7 +6,7 @@
 * The website is hosted in Google Cloud Free account, the site can be visited by following this link : http://myblogapp-1470629927816.appspot.com/
 * It can also be run using local host: Download Google App Engine python SDK and load this github cloned folder
 
-## Feature Checklist complying Project Rubric: https://review.udacity.com/#!/rubrics/150/view
+## Feature Checklist complying Project Rubric:
 * Code Functionality:
     * What framework is used? : App is built using Google App Engine : __done__
     * Blog is deployed and viewable to the public : The submitted URL is publicly accessible.: __done__
