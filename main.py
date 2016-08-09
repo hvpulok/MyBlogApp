@@ -437,8 +437,10 @@ class EditComment(Handler):
             key = db.Key.from_path('CommentDB', int(post_id))
             SelectedComment = db.get(key)
             commentor = SelectedComment.username
+            blogKey = SelectedComment.blogkey
+            selectedBlog = db.get(blogKey)
             if username == commentor :
-                self.render('edit_comment.html', currentUser=username, comment=SelectedComment)
+                self.render('edit_comment.html', currentUser=username, comment=SelectedComment, blog =selectedBlog )
             else:
                 self.render("alert.html",currentUser=currentUser.name, message = "Warning! You are not authorized to Edit this comment. Thanks.")
         else:
