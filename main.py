@@ -111,7 +111,7 @@ class Handler(webapp2.RequestHandler):
     def performLogin(self, val, checkRememberMe):
         cookie_val = make_secure_val(val)
         if checkRememberMe:
-            # Code to set cooking expiration after 14 days from now
+            # Code to set cookie expiration after 14 days from now
             expires = time.time() + 14 * 24 * 3600 
             expiresDate = time.strftime("%a, %d %b %Y %H:%M:%S GMT", time.gmtime(expires))
             self.response.headers.add_header('Set-Cookie', '%s=%s; Expires=%s; Path=/' % ('user_id', cookie_val, expiresDate))
@@ -194,11 +194,6 @@ class SelectedBlogPage(Handler):
         
         # code to retrieve all related likes data
         foundLikes = db.GqlQuery(("SELECT * FROM LikeDb WHERE blogRef= '%s' ORDER BY likeDate DESC") % str(key))
-
-        # foundblogs = db.GqlQuery(("SELECT * FROM Blog"))
-        # for blogsss in foundblogs:
-        #     blogsss.likeCount = 0
-        #     blogsss.put()
             
         # code to retrieve all related comments data
         foundComments = db.GqlQuery(("SELECT * FROM CommentDB WHERE blogkey= '%s'  ORDER BY commentDate ASC") % str(key))
@@ -514,10 +509,10 @@ app = webapp2.WSGIApplication([
     ('/blog', BlogPage),
     ('/blog/addblog', AddBlogPage),
     ('/blog/([a-z0-9]+)', SelectedBlogPage),
+    ('/blog/editblog/([a-z0-9]+)', EditBlog),
+    ('/blog/deleteblog/([a-z0-9]+)', DeleteBlog),
+    ('/blog/like/([a-z0-9]+)', LikeBlog),
     ('/blog/addcomment/([a-z0-9]+)', AddComment),
     ('/blog/editcomment/([a-z0-9]+)', EditComment),
-    ('/blog/deletecomment/([a-z0-9]+)', DeleteComment),
-    ('/blog/deleteblog/([a-z0-9]+)', DeleteBlog),
-    ('/blog/editblog/([a-z0-9]+)', EditBlog),
-    ('/blog/like/([a-z0-9]+)', LikeBlog)
+    ('/blog/deletecomment/([a-z0-9]+)', DeleteComment)
 ], debug=True)
