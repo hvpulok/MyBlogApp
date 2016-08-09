@@ -468,6 +468,30 @@ class EditComment(Handler):
                 #if user not logged in ask user to Login
                 self.render('login.html', alert="Please login First.")      
 
+class DeleteComment(Handler):
+    def get(self, post_id):
+        currentUser = self.checkCurrentUser()
+        if currentUser:
+            username = currentUser.name
+            # code to retrieve selected comment for edit
+            key = db.Key.from_path('CommentDB', int(post_id))
+            SelectedComment = db.get(key)
+            commentor = SelectedComment.username
+            blogKey = SelectedComment.blogkey
+            selectedBlog = db.get(blogKey)
+            if username == commentor :
+                # code to delete comment
+                db.delete(key)
+                #Code to update comment count
+                # code to redirect to selected blog
+                self.redirect("/blog/%s" % selectedBlog.key().id())
+                self.redirect("/blog/%s" % selectedBlog.key().id())
+            else:
+                self.render("alert.html",currentUser=currentUser.name, message = "Warning! You are not authorized to Delete this comment. Thanks.")
+        else:
+            #if user not logged in ask user to Login
+            self.render('login.html', alert="Please login First.")  
+
 # >>>>>>>>>>>>>>>>      Route definitions     <<<<<<<<<<<<<<<<<<<<<<<<
 app = webapp2.WSGIApplication([
     ('/', IndexPage),
@@ -479,6 +503,7 @@ app = webapp2.WSGIApplication([
     ('/blog/([a-z0-9]+)', SelectedBlogPage),
     ('/blog/addcomment/([a-z0-9]+)', AddComment),
     ('/blog/editcomment/([a-z0-9]+)', EditComment),
+    ('/blog/deletecomment/([a-z0-9]+)', DeleteComment),
     ('/blog/deleteblog/([a-z0-9]+)', DeleteBlog),
     ('/blog/editblog/([a-z0-9]+)', EditBlog),
     ('/blog/like/([a-z0-9]+)', LikeBlog)

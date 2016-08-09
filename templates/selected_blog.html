@@ -112,7 +112,7 @@
                                     <span> Comment Date: {{comment.commentDate.strftime("%b %d, %Y")}}</span>
                                     {% if currentUser==comment.username %}
                                         <a href="/blog/editcomment/{{comment.key().id()}}" class="btn btn-success btn-xs">Edit</a>
-                                        <a href="/blog/deleteblog/{{comment.key().id()}}" class="btn btn-danger btn-xs">Delete</a>
+                                        <a href="/blog/deletecomment/{{comment.key().id()}}" class="btn btn-danger btn-xs">Delete</a>
                                     {% endif %}
                                 </div>
                             </div>
