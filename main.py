@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-#
-# Copyright 2007 Google Inc.
+# <!--appcfg.py -A myblogapp-1470629927816 -V v1 update .-->
+# Copyright 2016 Md Kamrul Hasan Pulok, hvpulok@gmail.com
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,9 +22,8 @@ from string import letters
 import hashlib
 import hmac
 import random
-# import urllib
+import time
 
-secretCode = "Life is Beautiful"
 
 # code to initialize google datastore dB
 from google.appengine.ext import db
@@ -67,6 +66,7 @@ class CommentDB(db.Model):
     commentDate = db.DateTimeProperty(auto_now_add = True)
 
 # >>>>>>>>>>>>>      Password Protection definitions     <<<<<<<<<<<<<<<<
+secretCode = "Life is Beautiful"
 def make_secure_val(val):
     return '%s|%s' % (val, hmac.new(secretCode, val).hexdigest())
 
@@ -108,10 +108,16 @@ class Handler(webapp2.RequestHandler):
         webapp2.RequestHandler.initialize(self, *a, **kw)
 
     # This function is to set cookie of loggin User
-    def performLogin(self, val):
+    def performLogin(self, val, checkRememberMe):
         cookie_val = make_secure_val(val)
-        self.response.headers.add_header('Set-Cookie', '%s=%s; Path=/' % ('user_id', cookie_val))
-        
+        if checkRememberMe:
+            # Code to set cooking expiration after 14 days from now
+            expires = time.time() + 14 * 24 * 3600 
+            expiresDate = time.strftime("%a, %d %b %Y %H:%M:%S GMT", time.gmtime(expires))
+            self.response.headers.add_header('Set-Cookie', '%s=%s; Expires=%s; Path=/' % ('user_id', cookie_val, expiresDate))
+        else:
+            self.response.headers.add_header('Set-Cookie', '%s=%s; Path=/' % ('user_id', cookie_val))
+    
     def read_secure_cookie(self, name):
         cookie_val = self.request.cookies.get(name)
         return cookie_val and check_secure_val(cookie_val)
@@ -253,7 +259,7 @@ class SignUpPage(Handler):
         else:
             key = saveUser(newUsername, newPassword1, newEmail)
             val = str(key.id())
-            self.performLogin(val)
+            self.performLogin(val, checkRememberMe)
             self.redirect('/blog')
 
 
@@ -271,7 +277,7 @@ class LoginPage(Handler):
         if u and valid_pw(username, password, u.pw_hash):
             # code to set secure cookie
             val = str(u.key().id())
-            self.performLogin(val)
+            self.performLogin(val,checkRememberMe)
             self.redirect('/blog')
 
         else:
@@ -281,7 +287,7 @@ class LoginPage(Handler):
 class Logout(Handler):
     def get(self):
         # clear user-id cookie
-        self.response.headers.add_header('Set-Cookie', 'user_id=; Path=/')
+        self.response.headers.add_header('Set-Cookie', 'user_id=; Expires=; Path=/')
         # redirect to blog page
         self.redirect('/blog')
             
